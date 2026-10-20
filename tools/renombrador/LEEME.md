@@ -7,7 +7,7 @@ basura...) con análisis semántico. Cada referencia se actualiza, aunque haya d
 ## Uso
 
 ```bash
-herramientas/renombrador/renombrar.sh herramientas/renombrador/mapas/mi-mapa.txt
+tools/renombrador/renombrar.sh tools/renombrador/mapas/mi-mapa.txt
 ```
 
 En VS Code: *Terminal → Run Task → "renombrar símbolos"*.
@@ -36,5 +36,5 @@ ejecutarlos falla, porque los nombres antiguos ya no existen. Para seguir, parte
 Para encontrar candidatos:
 
 ```bash
-rg -n '\b(s?method_[0-9]+)\(' codigo_descompilado -g '*.cs'
+rg -n '\b(s?method_[0-9]+)\(' src/OpenGD77CPS -g '*.cs'
 ```

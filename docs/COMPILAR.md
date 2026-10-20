@@ -1,8 +1,8 @@
 # OpenGD77CPS — compilar y editar
 
-Código generado con `ilspycmd` 9.1 a partir de `extraccion_binarios/{app}/OpenGD77CPS.exe`
+Código generado con `ilspycmd` 9.1 a partir de `third_party/opengd77cps/extracted/app/OpenGD77CPS.exe`
 (instalador `OpenGD77CPSInstaller_E2026.07.13.01.exe`, build 2026-07-13). Desde entonces se ha
-modificado a mano: correcciones, renombrados y avisos resueltos. Ver `ANALISIS.md`.
+modificado a mano: correcciones, renombrados y avisos resueltos. Ver `docs/ANALISIS.md`.
 
 ## Compilar
 
@@ -12,8 +12,8 @@ Requiere .NET SDK 8 o superior. Funciona en Linux, macOS y Windows:
 dotnet build radio_sensei.sln -c Release      # desde la raíz del repositorio
 ```
 
-Salida: `codigo_descompilado/bin/Release/net48/OpenGD77CPS.exe`, junto con los archivos de datos y
-las DLL nativas copiadas desde `extraccion_binarios/{app}`. Para ejecutarlo, copia la carpeta
+Salida: `src/OpenGD77CPS/bin/Release/net48/OpenGD77CPS.exe`, junto con los archivos de datos y
+las DLL nativas copiadas desde `third_party/opengd77cps/extracted/app`. Para ejecutarlo, copia la carpeta
 entera a Windows (con .NET Framework 4.8).
 
 Notas:
@@ -44,7 +44,7 @@ instalador:
 ```bash
 dotnet tool install -g ilspycmd --version 9.1.0.7988
 R=~/.nuget/packages/microsoft.netframework.referenceassemblies.net48/1.0.3/build/.NETFramework/v4.8
-A="extraccion_binarios/{app}"
+A="third_party/opengd77cps/extracted/app"
 ilspycmd -p -o /tmp/descompilado_nuevo -r "$A" -r "$R" -r "$R/Facades" \
   --languageversion CSharp7_3 "$A/OpenGD77CPS.exe"
 ```

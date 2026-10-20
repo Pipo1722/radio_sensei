@@ -2,6 +2,7 @@
 
 Guía para orientarse en el código descompilado de `OpenGD77CPS.exe` (build 2026-07-13).
 Unas 57 800 líneas de C# en 123 archivos, aplicación WinForms para .NET Framework 4.8.
+Las rutas de archivo de este documento son relativas a `src/OpenGD77CPS/`.
 
 ## 1. Arquitectura
 
@@ -197,7 +198,7 @@ Nadie instancia estas clases. Están documentadas y no se han borrado, por si se
 - `Settings.SaveCodeplugBinary`/`LoadCodeplugBinary` usan `BinaryFormatter`, que es inseguro con
   archivos no confiables. No se usan para abrir `.g77`, que pasa por `ByteToData`.
 - Muchos métodos siguen con nombres genéricos (`method_N`, unos 500), sobre todo los auxiliares
-  de UI dentro de cada formulario. Ver `herramientas/renombrador` para seguir renombrándolos de
+  de UI dentro de cada formulario. Ver `tools/renombrador` para seguir renombrándolos de
   forma segura.
 
 ## 10. Dónde tocar para cambios habituales
@@ -218,6 +219,6 @@ Nadie instancia estas clases. Están documentadas y no se han borrado, por si se
 Para buscar en el código usa `rg` (ripgrep). Por ejemplo:
 
 ```bash
-rg -n "TxFreq" codigo_descompilado/DMR
-rg -n "Power_5W" codigo_descompilado
+rg -n "TxFreq" src/OpenGD77CPS/DMR
+rg -n "Power_5W" src/OpenGD77CPS
 ```

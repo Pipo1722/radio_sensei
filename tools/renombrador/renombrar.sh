@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # Aplica un mapa de renombrado al proyecto descompilado y comprueba que sigue compilando.
-# Uso: herramientas/renombrador/renombrar.sh <mapa.txt>
+# Uso: tools/renombrador/renombrar.sh <mapa.txt>
 set -euo pipefail
 here="$(cd "$(dirname "$0")" && pwd)"
 root="$(cd "$here/../.." && pwd)"
-proj="$root/codigo_descompilado"
+proj="$root/src/OpenGD77CPS"
 map="$(cd "$(dirname "$1")" && pwd)/$(basename "$1")"
 refs="$(mktemp)"
 trap 'rm -f "$refs"' EXIT

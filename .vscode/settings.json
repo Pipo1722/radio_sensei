@@ -6,7 +6,7 @@
         "**/obj": true
     },
     "search.exclude": {
-        "extraccion_binarios": true,
+        "third_party": true,
         "**/*.exe": true,
         "**/*.dll": true
     },

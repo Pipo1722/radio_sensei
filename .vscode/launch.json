@@ -7,8 +7,8 @@
             "type": "clr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/codigo_descompilado/bin/Debug/net48/OpenGD77CPS.exe",
-            "cwd": "${workspaceFolder}/codigo_descompilado/bin/Debug/net48",
+            "program": "${workspaceFolder}/src/OpenGD77CPS/bin/Debug/net48/OpenGD77CPS.exe",
+            "cwd": "${workspaceFolder}/src/OpenGD77CPS/bin/Debug/net48",
             "console": "internalConsole",
             "stopAtEntry": false
         }

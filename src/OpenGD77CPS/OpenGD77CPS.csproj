@@ -17,7 +17,7 @@
     <RootNamespace />
   </PropertyGroup>
   <PropertyGroup>
-    <BinDir>../extraccion_binarios/{app}</BinDir>
+    <BinDir>../../third_party/opengd77cps/extracted/app</BinDir>
   </PropertyGroup>
   <ItemGroup>
     <!-- Reference assemblies so net48 builds on Linux/macOS without the Windows targeting pack -->
