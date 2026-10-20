@@ -1,3 +1,21 @@
 {
-    "dotnet.preferCSharpExtension": true
+    "dotnet.preferCSharpExtension": true,
+    "dotnet.defaultSolution": "radio_sensei.sln",
+    "files.exclude": {
+        "**/bin": true,
+        "**/obj": true
+    },
+    "search.exclude": {
+        "third_party": true,
+        "**/*.exe": true,
+        "**/*.dll": true
+    },
+    "files.associations": {
+        "*.g77": "plaintext"
+    },
+    "[csharp]": {
+        "editor.insertSpaces": false,
+        "editor.tabSize": 4,
+        "editor.formatOnSave": false
+    }
 }

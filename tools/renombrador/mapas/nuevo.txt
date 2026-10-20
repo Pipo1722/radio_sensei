@@ -1,0 +1,7 @@
+# Plantilla: copia este archivo, añade líneas y ejecútalo con renombrar.sh.
+#   Tipo => NuevoTipo                    renombra el tipo (y su archivo .cs)
+#   Tipo::miembro => nuevoNombre         campo, método, propiedad o tipo anidado
+#   Tipo::metodo(parametro) => nuevo     parámetro o parámetro genérico
+# Usa el nombre completo si hay ambigüedad: DMR.ZoneForm::method_1 => ...
+# Ejemplo:
+# DMR.ZoneForm::method_1 => InitializeControls

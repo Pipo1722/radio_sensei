@@ -1,0 +1,46 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "detail": "Compila OpenGD77CPS (Debug)",
+            "command": "dotnet",
+            "type": "process",
+            "args": ["build", "${workspaceFolder}/radio_sensei.sln", "-c", "Debug", "/property:GenerateFullPaths=true", "/consoleloggerparameters:NoSummary"],
+            "problemMatcher": "$msCompile",
+            "group": { "kind": "build", "isDefault": true }
+        },
+        {
+            "label": "build release",
+            "detail": "Compila OpenGD77CPS (Release) en src/OpenGD77CPS/bin/Release/net48",
+            "command": "dotnet",
+            "type": "process",
+            "args": ["build", "${workspaceFolder}/radio_sensei.sln", "-c", "Release", "/property:GenerateFullPaths=true", "/consoleloggerparameters:NoSummary"],
+            "problemMatcher": "$msCompile",
+            "group": "build"
+        },
+        {
+            "label": "clean",
+            "command": "dotnet",
+            "type": "process",
+            "args": ["clean", "${workspaceFolder}/radio_sensei.sln"],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "renombrar símbolos",
+            "detail": "Aplica un mapa de renombrado con Roslyn (ver tools/renombrador/LEEME.md)",
+            "type": "shell",
+            "command": "${workspaceFolder}/tools/renombrador/renombrar.sh",
+            "args": ["${input:mapaRenombrado}"],
+            "problemMatcher": []
+        }
+    ],
+    "inputs": [
+        {
+            "id": "mapaRenombrado",
+            "type": "promptString",
+            "description": "Ruta del mapa de renombrado",
+            "default": "tools/renombrador/mapas/nuevo.txt"
+        }
+    ]
+}

@@ -1,0 +1,10 @@
+# Salidas de compilación
+bin/
+obj/
+*.user
+*.suo
+.vs/
+
+# Copias de trabajo locales
+*.bak
+*.tmp

@@ -1,0 +1,25 @@
+name: build
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      # Los avisos cuentan como error: el proyecto está en 0 avisos y debe seguir así.
+      - name: Build
+        run: dotnet build radio_sensei.sln -c Release -warnaserror
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: OpenGD77CPS-net48
+          path: src/OpenGD77CPS/bin/Release/net48/
+          if-no-files-found: error

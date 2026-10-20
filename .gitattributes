@@ -1,0 +1,22 @@
+# Código y configuración: siempre LF (coincide con .editorconfig)
+*.cs       text eol=lf
+*.csproj   text eol=lf
+*.sln      text eol=lf
+*.resx     text eol=lf
+*.md       text eol=lf
+*.json     text eol=lf
+*.sh       text eol=lf
+*.txt      text eol=lf
+*.cmd      text eol=crlf
+*.bat      text eol=crlf
+
+# Binarios
+*.exe  binary
+*.dll  binary
+*.g77  binary
+*.chm  binary
+*.ico  binary
+*.png  binary
+
+# Material original del fabricante: se guarda byte a byte, sin normalizar
+third_party/** -text
