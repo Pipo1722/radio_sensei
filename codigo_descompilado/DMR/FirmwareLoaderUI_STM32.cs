@@ -48,7 +48,7 @@ namespace DMR
 
 		public static Dictionary<string, string> StringsDict = new Dictionary<string, string>();
 
-		private IContainer components;
+		private IContainer components = null;
 
 		private Label lblLanguage;
 

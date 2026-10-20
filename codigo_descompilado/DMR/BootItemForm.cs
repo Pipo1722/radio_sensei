@@ -128,11 +128,11 @@ namespace DMR
 			{
 				get
 				{
-					return Settings.smethod_25(bootLine1);
+					return Settings.Gb2312BytesToString(bootLine1);
 				}
 				set
 				{
-					byte[] array = Settings.smethod_23(value);
+					byte[] array = Settings.StringToGb2312Bytes(value);
 					bootLine1.Fill(byte.MaxValue);
 					Array.Copy(array, 0, bootLine1, 0, Math.Min(array.Length, bootLine1.Length));
 				}
@@ -142,11 +142,11 @@ namespace DMR
 			{
 				get
 				{
-					return Settings.smethod_25(bootLine2);
+					return Settings.Gb2312BytesToString(bootLine2);
 				}
 				set
 				{
-					byte[] array = Settings.smethod_23(value);
+					byte[] array = Settings.StringToGb2312Bytes(value);
 					bootLine2.Fill(byte.MaxValue);
 					Array.Copy(array, 0, bootLine2, 0, Math.Min(array.Length, bootLine2.Length));
 				}
@@ -380,14 +380,14 @@ namespace DMR
 		{
 			InitializeComponent();
 			base.Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
-			Scale(Settings.smethod_6());
+			Scale(Settings.GetFactor());
 		}
 
 		private void method_1()
 		{
 			txtBootPwd.MaxLength = 6;
 			txtBootPwd.InputString = "0123456789\b";
-			Settings.smethod_37(cmbBootScreen, SZ_BOOT_SCREEN);
+			Settings.FillComboBox(cmbBootScreen, SZ_BOOT_SCREEN);
 			txtLine1.MaxByteLength = 16;
 			txtLine2.MaxByteLength = 16;
 		}
@@ -395,12 +395,12 @@ namespace DMR
 		public static void RefreshCommonLang()
 		{
 			string name = typeof(BootItemForm).Name;
-			Settings.smethod_78("BootScreen", SZ_BOOT_SCREEN, name);
+			Settings.LoadSectionStringArray("BootScreen", SZ_BOOT_SCREEN, name);
 		}
 
 		private void BootItemForm_Load(object sender, EventArgs e)
 		{
-			Settings.smethod_59(base.Controls);
+			Settings.AttachHelpHandlers(base.Controls);
 			Settings.UpdateComponentTextsFromLanguageXmlData(this);
 			method_1();
 			DispData();

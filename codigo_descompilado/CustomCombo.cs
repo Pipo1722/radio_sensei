@@ -11,13 +11,13 @@ internal class CustomCombo : ComboBox
 		ItemList = new Hashtable();
 	}
 
-	public void method_0()
+	public void ClearItems()
 	{
 		base.Items.Clear();
 		ItemList.Clear();
 	}
 
-	public void method_1(string string_0, int int_0)
+	public void AddItem(string string_0, int int_0)
 	{
 		int num = base.Items.Add(new NameValuePair(string_0, int_0));
 		if (!ItemList.Contains(int_0))
@@ -26,7 +26,7 @@ internal class CustomCombo : ComboBox
 		}
 	}
 
-	public void method_2(int int_0)
+	public void SelectByValue(int int_0)
 	{
 		if (ItemList.ContainsKey(int_0))
 		{
@@ -42,7 +42,7 @@ internal class CustomCombo : ComboBox
 		}
 	}
 
-	public int method_3()
+	public int GetSelectedValue()
 	{
 		if (base.SelectedItem is NameValuePair nameValuePair)
 		{

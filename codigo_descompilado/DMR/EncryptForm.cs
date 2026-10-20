@@ -299,7 +299,7 @@ namespace DMR
 		public EncryptForm()
 		{
 			InitializeComponent();
-			Scale(Settings.smethod_6());
+			Scale(Settings.GetFactor());
 		}
 
 		[CompilerGenerated]
@@ -376,20 +376,20 @@ namespace DMR
 			obj.MaxInputLength = 8;
 			obj.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
 			obj.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-			Settings.smethod_37(cmbType, SZ_ENCRYPT_TYPE);
+			Settings.FillComboBox(cmbType, SZ_ENCRYPT_TYPE);
 		}
 
 		public static void RefreshCommonLang()
 		{
 			string name = typeof(EncryptForm).Name;
-			Settings.smethod_78("EncryptType", SZ_ENCRYPT_TYPE, name);
+			Settings.LoadSectionStringArray("EncryptType", SZ_ENCRYPT_TYPE, name);
 		}
 
 		private void EncryptForm_Load(object sender, EventArgs e)
 		{
 			try
 			{
-				Settings.smethod_59(base.Controls);
+				Settings.AttachHelpHandlers(base.Controls);
 				Settings.UpdateComponentTextsFromLanguageXmlData(this);
 				method_2();
 				DispData();
@@ -528,8 +528,8 @@ namespace DMR
 			if (e.Control is DataGridViewTextBoxEditingControl)
 			{
 				DataGridViewTextBoxEditingControl obj = (DataGridViewTextBoxEditingControl)e.Control;
-				obj.KeyPress -= Settings.smethod_58;
-				obj.KeyPress += Settings.smethod_58;
+				obj.KeyPress -= Settings.ValidateKeyPressHex;
+				obj.KeyPress += Settings.ValidateKeyPressHex;
 				obj.CharacterCasing = CharacterCasing.Upper;
 			}
 		}

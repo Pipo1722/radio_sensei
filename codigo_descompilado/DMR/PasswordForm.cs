@@ -74,7 +74,7 @@ namespace DMR
 		{
 			InitializeComponent();
 			base.Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
-			Scale(Settings.smethod_6());
+			Scale(Settings.GetFactor());
 		}
 
 		private void PasswordForm_Load(object sender, EventArgs e)

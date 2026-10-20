@@ -1092,43 +1092,43 @@ namespace DMR
 		{
 			InitializeComponent();
 			base.Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
-			Scale(Settings.smethod_6());
+			Scale(Settings.GetFactor());
 		}
 
 		private void method_0()
 		{
-			Settings.smethod_41(cmbMenuHangTime, 1, 30);
+			Settings.FillComboBoxWithRange(cmbMenuHangTime, 1, 30);
 			cmbMenuHangTime.Items.Insert(0, "∞");
-			Settings.smethod_37(cmbKeyLockTime, SZ_KEY_LOCK_TIME);
-			Settings.smethod_37(cmbBacklightTime, SZ_BACKLIGHT_TIME);
-			Settings.smethod_37(cmbWorkMode, SZ_WORK_MODE);
-			Settings.smethod_37(cmbChDispMode, SZ_CH_DISP_MODE);
-			Settings.smethod_37(cmbMenuLang, SZ_MENU_LANG);
-			Settings.smethod_37(cmbKeyTone, SZ_KEY_TONE);
-			Settings.smethod_37(cmbDwSwitch, SZ_DOUBLE_WAIT);
+			Settings.FillComboBox(cmbKeyLockTime, SZ_KEY_LOCK_TIME);
+			Settings.FillComboBox(cmbBacklightTime, SZ_BACKLIGHT_TIME);
+			Settings.FillComboBox(cmbWorkMode, SZ_WORK_MODE);
+			Settings.FillComboBox(cmbChDispMode, SZ_CH_DISP_MODE);
+			Settings.FillComboBox(cmbMenuLang, SZ_MENU_LANG);
+			Settings.FillComboBox(cmbKeyTone, SZ_KEY_TONE);
+			Settings.FillComboBox(cmbDwSwitch, SZ_DOUBLE_WAIT);
 			grpBasic.method_1(bool_0: true);
 			grpCall.method_1(bool_0: true);
 			grpContact.method_1(bool_0: true);
 			grpScan.method_1(bool_0: true);
 			grpSetting.method_1(bool_0: true);
-			Settings.smethod_41(cmbBrightness, 1, 5);
+			Settings.FillComboBoxWithRange(cmbBrightness, 1, 5);
 		}
 
 		public static void RefreshCommonLang()
 		{
 			string name = typeof(MenuForm).Name;
-			Settings.smethod_78("BacklightTime", SZ_BACKLIGHT_TIME, name);
-			Settings.smethod_78("KeyLockTime", SZ_KEY_LOCK_TIME, name);
-			Settings.smethod_78("WorkMode", SZ_WORK_MODE, name);
-			Settings.smethod_78("ChDispMode", SZ_CH_DISP_MODE, name);
-			Settings.smethod_78("KeyTone", SZ_KEY_TONE, name);
-			Settings.smethod_78("DoubleWait", SZ_DOUBLE_WAIT, name);
-			Settings.smethod_78("MenuLang", SZ_MENU_LANG, name);
+			Settings.LoadSectionStringArray("BacklightTime", SZ_BACKLIGHT_TIME, name);
+			Settings.LoadSectionStringArray("KeyLockTime", SZ_KEY_LOCK_TIME, name);
+			Settings.LoadSectionStringArray("WorkMode", SZ_WORK_MODE, name);
+			Settings.LoadSectionStringArray("ChDispMode", SZ_CH_DISP_MODE, name);
+			Settings.LoadSectionStringArray("KeyTone", SZ_KEY_TONE, name);
+			Settings.LoadSectionStringArray("DoubleWait", SZ_DOUBLE_WAIT, name);
+			Settings.LoadSectionStringArray("MenuLang", SZ_MENU_LANG, name);
 		}
 
 		private void MenuForm_Load(object sender, EventArgs e)
 		{
-			Settings.smethod_59(base.Controls);
+			Settings.AttachHelpHandlers(base.Controls);
 			Settings.UpdateComponentTextsFromLanguageXmlData(this);
 			method_0();
 			DispData();

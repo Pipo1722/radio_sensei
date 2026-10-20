@@ -819,7 +819,7 @@ namespace DMR
 				Settings.ValidateNumberRangeWithDefault(ref respTmr, 1, byte.MaxValue, def.respTmr);
 				Settings.ValidateNumberRangeWithDefault(ref grpHang, 0, 14, def.grpHang);
 				Settings.ValidateNumberRangeWithDefault(ref privateHang, 0, 14, def.privateHang);
-				int num = Settings.smethod_14(flag1, 6, 2);
+				int num = Settings.GetBits(flag1, 6, 2);
 				if (!Enum.IsDefined(typeof(ArtsTone), num))
 				{
 					ArtsTone = def.ArtsTone;
@@ -1843,7 +1843,7 @@ namespace DMR
 		{
 			InitializeComponent();
 			base.Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
-			Scale(Settings.smethod_6());
+			Scale(Settings.GetFactor());
 		}
 
 		private void method_1()
@@ -1851,24 +1851,24 @@ namespace DMR
 			txtCallsign.MaxLength = 8;
 			txtRadioId.MaxLength = 8;
 			txtRadioId.InputString = "0123456789\b";
-			Settings.smethod_36(nudArsInitDly, new Class13(0, 8, 1, 30m, 3));
-			Settings.smethod_36(nudTxPreambleDur, new Class13(0, 144, 1, 60m, 4));
-			Settings.smethod_37(cmbMonitorType, SZ_MONITOR_TYPE);
-			Settings.smethod_41(cmbVoxSense, 1, 10);
-			Settings.smethod_37(cmbTalkPermitTone, SZ_TALK_PERMIT_TONE);
-			Settings.smethod_36(nudRxLowBatt, new Class13(0, 127, 1, 5m, 3));
-			Settings.smethod_36(nudCallAlertDur, new Class13(0, 240, 1, 5m, 4));
-			nudCallAlertDur.method_4(0m);
-			nudCallAlertDur.method_6("∞");
-			Settings.smethod_37(cmbUpChMode, SZ_CH_MODE);
-			Settings.smethod_37(cmbDownChMode, SZ_CH_MODE);
-			Settings.smethod_37(cmbArtsTone, SZ_ARTS_TONE);
-			Settings.smethod_36(nudRespTmr, new Class13(1, 255, 1, 1m, 3));
-			Settings.smethod_36(nudReminderTmr, new Class13(1, 255, 1, 1m, 3));
-			Settings.smethod_36(nudGrpHang, new Class13(0, 14, 1, 500m, 4));
-			Settings.smethod_36(nudPrivateHang, new Class13(0, 14, 1, 500m, 4));
-			Settings.smethod_37(cmbVoiceLang, SZ_VOICE_LANG);
-			Settings.smethod_37(cmbScanMode, SZ_SCAN_MODE);
+			Settings.ApplyNumericRange(nudArsInitDly, new NumericRange(0, 8, 1, 30m, 3));
+			Settings.ApplyNumericRange(nudTxPreambleDur, new NumericRange(0, 144, 1, 60m, 4));
+			Settings.FillComboBox(cmbMonitorType, SZ_MONITOR_TYPE);
+			Settings.FillComboBoxWithRange(cmbVoxSense, 1, 10);
+			Settings.FillComboBox(cmbTalkPermitTone, SZ_TALK_PERMIT_TONE);
+			Settings.ApplyNumericRange(nudRxLowBatt, new NumericRange(0, 127, 1, 5m, 3));
+			Settings.ApplyNumericRange(nudCallAlertDur, new NumericRange(0, 240, 1, 5m, 4));
+			nudCallAlertDur.SetReplaceValue(0m);
+			nudCallAlertDur.SetReplaceString("∞");
+			Settings.FillComboBox(cmbUpChMode, SZ_CH_MODE);
+			Settings.FillComboBox(cmbDownChMode, SZ_CH_MODE);
+			Settings.FillComboBox(cmbArtsTone, SZ_ARTS_TONE);
+			Settings.ApplyNumericRange(nudRespTmr, new NumericRange(1, 255, 1, 1m, 3));
+			Settings.ApplyNumericRange(nudReminderTmr, new NumericRange(1, 255, 1, 1m, 3));
+			Settings.ApplyNumericRange(nudGrpHang, new NumericRange(0, 14, 1, 500m, 4));
+			Settings.ApplyNumericRange(nudPrivateHang, new NumericRange(0, 14, 1, 500m, 4));
+			Settings.FillComboBox(cmbVoiceLang, SZ_VOICE_LANG);
+			Settings.FillComboBox(cmbScanMode, SZ_SCAN_MODE);
 			txtProgramPwd.MaxByteLength = 8;
 			txtProgramPwd.InputString = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz\b";
 		}
@@ -1876,16 +1876,16 @@ namespace DMR
 		public static void RefreshCommonLang()
 		{
 			string name = typeof(GeneralSetForm).Name;
-			Settings.smethod_78("MonitorType", SZ_MONITOR_TYPE, name);
-			Settings.smethod_78("TalkPermitTone", SZ_TALK_PERMIT_TONE, name);
-			Settings.smethod_78("ArtsToneName", SZ_ARTS_TONE, name);
-			Settings.smethod_78("ChannelMode", SZ_CH_MODE, name);
-			Settings.smethod_78("ScanMode", SZ_SCAN_MODE, name);
+			Settings.LoadSectionStringArray("MonitorType", SZ_MONITOR_TYPE, name);
+			Settings.LoadSectionStringArray("TalkPermitTone", SZ_TALK_PERMIT_TONE, name);
+			Settings.LoadSectionStringArray("ArtsToneName", SZ_ARTS_TONE, name);
+			Settings.LoadSectionStringArray("ChannelMode", SZ_CH_MODE, name);
+			Settings.LoadSectionStringArray("ScanMode", SZ_SCAN_MODE, name);
 		}
 
 		private void GeneralSetForm_Load(object sender, EventArgs e)
 		{
-			Settings.smethod_59(base.Controls);
+			Settings.AttachHelpHandlers(base.Controls);
 			Settings.UpdateComponentTextsFromLanguageXmlData(this);
 			DispData();
 		}

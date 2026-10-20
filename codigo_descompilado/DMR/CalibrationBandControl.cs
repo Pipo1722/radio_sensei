@@ -10,7 +10,7 @@ namespace DMR
 
 		private string _type = "";
 
-		private IContainer components;
+		private IContainer components = null;
 
 		private GroupBox grpSquelch;
 

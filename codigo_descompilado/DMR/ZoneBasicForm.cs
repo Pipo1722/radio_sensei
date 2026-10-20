@@ -57,15 +57,15 @@ namespace DMR
 		{
 			if (ChannelForm.CurCntCh > 128)
 			{
-				ZoneForm.basicData.CurZone = cmbMainZone.method_3();
-				ZoneForm.basicData.MainCh = cmbMainCh.method_3();
-				ZoneForm.basicData.SubCh = cmbSubCh.method_3();
-				ZoneForm.basicData.SubZone = cmbSubZone.method_3();
+				ZoneForm.basicData.CurZone = cmbMainZone.GetSelectedValue();
+				ZoneForm.basicData.MainCh = cmbMainCh.GetSelectedValue();
+				ZoneForm.basicData.SubCh = cmbSubCh.GetSelectedValue();
+				ZoneForm.basicData.SubZone = cmbSubZone.GetSelectedValue();
 			}
 			else
 			{
-				ZoneForm.basicData.MainCh = cmbMainCh.method_3();
-				ZoneForm.basicData.SubCh = cmbSubCh.method_3();
+				ZoneForm.basicData.MainCh = cmbMainCh.GetSelectedValue();
+				ZoneForm.basicData.SubCh = cmbSubCh.GetSelectedValue();
 			}
 			((MainForm)base.MdiParent).RefreshRelatedForm(GetType());
 		}
@@ -74,14 +74,14 @@ namespace DMR
 		{
 			method_2(cmbMainZone);
 			int curZone = ZoneForm.basicData.CurZone;
-			cmbMainZone.method_2(ZoneForm.basicData.CurZone);
+			cmbMainZone.SelectByValue(ZoneForm.basicData.CurZone);
 			method_3(curZone);
-			cmbMainCh.method_2(ZoneForm.basicData.MainCh);
+			cmbMainCh.SelectByValue(ZoneForm.basicData.MainCh);
 			method_2(cmbSubZone);
 			int subZone = ZoneForm.basicData.SubZone;
-			cmbSubZone.method_2(ZoneForm.basicData.SubZone);
+			cmbSubZone.SelectByValue(ZoneForm.basicData.SubZone);
 			method_4(subZone);
-			cmbSubCh.method_2(ZoneForm.basicData.SubCh);
+			cmbSubCh.SelectByValue(ZoneForm.basicData.SubCh);
 			lstZones.Items.Clear();
 			for (curZone = 0; curZone < 68; curZone++)
 			{
@@ -108,7 +108,7 @@ namespace DMR
 		{
 			InitializeComponent();
 			base.Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
-			Scale(Settings.smethod_6());
+			Scale(Settings.GetFactor());
 		}
 
 		private void method_1()
@@ -120,12 +120,12 @@ namespace DMR
 		private void method_2(CustomCombo class4_0)
 		{
 			int num = 0;
-			class4_0.method_0();
+			class4_0.ClearItems();
 			for (num = 0; num <= 250; num++)
 			{
 				if (ZoneForm.data.ZoneChIsValid(num))
 				{
-					class4_0.method_1(ZoneForm.data.GetName(num), num);
+					class4_0.AddItem(ZoneForm.data.GetName(num), num);
 				}
 			}
 		}
@@ -142,32 +142,32 @@ namespace DMR
 
 		private void method_5(int int_0, CustomCombo class4_0)
 		{
-			class4_0.method_0();
+			class4_0.ClearItems();
 			for (int i = 0; i < 80; i++)
 			{
 				int num = ZoneForm.data[int_0].ChList[i] - 1;
 				if (num >= 0 && num < ChannelForm.CurCntCh && ChannelForm.data.DataIsValid(num))
 				{
-					class4_0.method_1(ChannelForm.data.GetName(num), i);
+					class4_0.AddItem(ChannelForm.data.GetName(num), i);
 				}
 			}
 		}
 
 		private void method_6()
 		{
-			cmbSubCh.method_0();
+			cmbSubCh.ClearItems();
 			for (int i = 0; i < ChannelForm.CurCntCh; i++)
 			{
 				if (ChannelForm.data.DataIsValid(i))
 				{
-					cmbSubCh.method_1(ChannelForm.data.GetName(i), i + 1);
+					cmbSubCh.AddItem(ChannelForm.data.GetName(i), i + 1);
 				}
 			}
 		}
 
 		private void ZoneBasicForm_Load(object sender, EventArgs e)
 		{
-			Settings.smethod_59(base.Controls);
+			Settings.AttachHelpHandlers(base.Controls);
 			Settings.UpdateComponentTextsFromLanguageXmlData(this);
 			DispData();
 		}
@@ -178,7 +178,7 @@ namespace DMR
 
 		private void cmbMainZone_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			int num = cmbMainZone.method_3();
+			int num = cmbMainZone.GetSelectedValue();
 			if (num != MainZoneLastSelectedIndex)
 			{
 				method_3(num);
@@ -191,7 +191,7 @@ namespace DMR
 
 		private void cmbSubZone_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			int num = cmbSubZone.method_3();
+			int num = cmbSubZone.GetSelectedValue();
 			if (num != SubZoneLastSelectedIndex)
 			{
 				method_4(num);
@@ -204,12 +204,12 @@ namespace DMR
 
 		private void cmbMainZone_DropDown(object sender, EventArgs e)
 		{
-			MainZoneLastSelectedIndex = cmbMainZone.method_3();
+			MainZoneLastSelectedIndex = cmbMainZone.GetSelectedValue();
 		}
 
 		private void cmbSubZone_DropDown(object sender, EventArgs e)
 		{
-			SubZoneLastSelectedIndex = cmbSubZone.method_3();
+			SubZoneLastSelectedIndex = cmbSubZone.GetSelectedValue();
 		}
 
 		protected override void Dispose(bool disposing)

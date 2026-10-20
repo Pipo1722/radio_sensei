@@ -175,7 +175,7 @@ namespace DMR
 			string text = "";
 			num2 = GetMinIndex();
 			text = string.Format(Format, num2 + 1);
-			if (!Settings.smethod_51(node, text))
+			if (!Settings.ChildNameExists(node, text))
 			{
 				return text;
 			}
@@ -185,7 +185,7 @@ namespace DMR
 				if (num < Count)
 				{
 					text = string.Format(Format, num + 1);
-					if (!Settings.smethod_51(node, text))
+					if (!Settings.ChildNameExists(node, text))
 					{
 						break;
 					}

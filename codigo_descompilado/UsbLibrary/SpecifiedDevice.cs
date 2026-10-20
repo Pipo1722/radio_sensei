@@ -44,7 +44,7 @@ namespace UsbLibrary
 					this.DataSend(this, new DataSendEventArgs(data));
 				}
 			}
-			catch (GException0 gException)
+			catch (HIDDeviceException gException)
 			{
 				Console.WriteLine(gException.Message);
 				return false;
@@ -69,7 +69,7 @@ namespace UsbLibrary
 					this.DataSend(this, new DataSendEventArgs(data));
 				}
 			}
-			catch (GException0 gException)
+			catch (HIDDeviceException gException)
 			{
 				Console.WriteLine(gException.Message);
 				return false;

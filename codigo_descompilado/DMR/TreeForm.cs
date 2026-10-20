@@ -30,7 +30,7 @@ namespace DMR
 		public TreeForm()
 		{
 			InitializeComponent();
-			Scale(Settings.smethod_6());
+			Scale(Settings.GetFactor());
 		}
 	}
 }

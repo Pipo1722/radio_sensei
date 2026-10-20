@@ -41,7 +41,7 @@ namespace Extras.OpenGD77
 
 		public static Dictionary<string, string> OpenGD77StringsDict = new Dictionary<string, string>();
 
-		private IContainer components;
+		private IContainer components = null;
 
 		private Button btnOpen;
 

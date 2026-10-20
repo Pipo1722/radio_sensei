@@ -58,7 +58,7 @@ namespace DMR
 			{
 				get
 				{
-					return Settings.smethod_14(gps, 6, 2) == 0;
+					return Settings.GetBits(gps, 6, 2) == 0;
 				}
 				set
 				{
@@ -77,7 +77,7 @@ namespace DMR
 			{
 				get
 				{
-					int num = Settings.smethod_14(gps, 1, 5);
+					int num = Settings.GetBits(gps, 1, 5);
 					if (num >= 0 && num <= 24)
 					{
 						return num;
@@ -86,7 +86,7 @@ namespace DMR
 				}
 				set
 				{
-					Settings.smethod_16(ref gps, 1, 5, value);
+					Settings.SetBits(ref gps, 1, 5, value);
 				}
 			}
 
@@ -94,17 +94,17 @@ namespace DMR
 			{
 				get
 				{
-					return Settings.smethod_14(fm, 6, 2) == 0;
+					return Settings.GetBits(fm, 6, 2) == 0;
 				}
 				set
 				{
 					if (value)
 					{
-						Settings.smethod_15(ref fm, 6, 2);
+						Settings.ClearBits(ref fm, 6, 2);
 					}
 					else
 					{
-						Settings.smethod_16(ref fm, 6, 2, 3);
+						Settings.SetBits(ref fm, 6, 2, 3);
 					}
 				}
 			}
@@ -113,7 +113,7 @@ namespace DMR
 			{
 				get
 				{
-					int num = Settings.smethod_14(fm, 1, 5);
+					int num = Settings.GetBits(fm, 1, 5);
 					if (num < 0 || num >= 20)
 					{
 						num = 0;
@@ -122,7 +122,7 @@ namespace DMR
 				}
 				set
 				{
-					Settings.smethod_16(ref fm, 1, 5, value);
+					Settings.SetBits(ref fm, 1, 5, value);
 				}
 			}
 
@@ -168,17 +168,17 @@ namespace DMR
 			{
 				get
 				{
-					return Settings.smethod_14(recording, 7, 1) == 0;
+					return Settings.GetBits(recording, 7, 1) == 0;
 				}
 				set
 				{
 					if (value)
 					{
-						Settings.smethod_15(ref recording, 7, 1);
+						Settings.ClearBits(ref recording, 7, 1);
 					}
 					else
 					{
-						Settings.smethod_16(ref recording, 7, 1, 1);
+						Settings.SetBits(ref recording, 7, 1, 1);
 					}
 				}
 			}
@@ -187,7 +187,7 @@ namespace DMR
 			{
 				get
 				{
-					int num = Settings.smethod_14(recording, 1, 5);
+					int num = Settings.GetBits(recording, 1, 5);
 					if (num < 0 || num >= 31)
 					{
 						num = 0;
@@ -196,7 +196,7 @@ namespace DMR
 				}
 				set
 				{
-					Settings.smethod_16(ref recording, 1, 5, value);
+					Settings.SetBits(ref recording, 1, 5, value);
 				}
 			}
 
@@ -595,8 +595,8 @@ namespace DMR
 				}
 				data.RecordingSwitch = chkRecordingSwitch.Checked;
 				data.RecordingInterval = cmbRecordingInterval.SelectedIndex;
-				data.CallZone = cmbCallZone.method_3();
-				data.CallCh = cmbCallCh.method_3();
+				data.CallZone = cmbCallZone.GetSelectedValue();
+				data.CallCh = cmbCallCh.GetSelectedValue();
 			}
 			catch (Exception ex)
 			{
@@ -624,9 +624,9 @@ namespace DMR
 				int num2 = 0;
 				method_3(cmbCallZone);
 				num2 = data.CallZone;
-				cmbCallZone.method_2(data.CallZone);
+				cmbCallZone.SelectByValue(data.CallZone);
 				method_4(num2, cmbCallCh);
-				cmbCallCh.method_2(data.CallCh);
+				cmbCallCh.SelectByValue(data.CallCh);
 				method_2();
 			}
 			catch (Exception ex)
@@ -643,18 +643,18 @@ namespace DMR
 		{
 			InitializeComponent();
 			base.Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
-			Scale(Settings.smethod_6());
+			Scale(Settings.GetFactor());
 		}
 
 		private void method_1()
 		{
 			if (MenuForm.data.Fm)
 			{
-				Settings.smethod_37(cmbP1Key, SZ_PK1_KEY);
+				Settings.FillComboBox(cmbP1Key, SZ_PK1_KEY);
 			}
 			else
 			{
-				Settings.smethod_38(cmbP1Key, SZ_PK1_KEY, 2);
+				Settings.FillComboBoxLimited(cmbP1Key, SZ_PK1_KEY, 2);
 			}
 			string text = "";
 			cmbTimeZone.Items.Clear();
@@ -663,17 +663,17 @@ namespace DMR
 				text = string.Format("GMT{0}", (i - 12).ToString("+0;-0"));
 				cmbTimeZone.Items.Add(text);
 			}
-			Settings.smethod_41(cmbBootCh, 1, 20);
+			Settings.FillComboBoxWithRange(cmbBootCh, 1, 20);
 			dgvAttachment.RowCount = 20;
 			dgvAttachment.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
 			dgvAttachment.AllowUserToDeleteRows = false;
 			dgvAttachment.AllowUserToAddRows = false;
-			Settings.smethod_41(cmbRecordingInterval, 1, 32);
+			Settings.FillComboBoxWithRange(cmbRecordingInterval, 1, 32);
 		}
 
 		private void AttachmentForm_Load(object sender, EventArgs e)
 		{
-			Settings.smethod_59(base.Controls);
+			Settings.AttachHelpHandlers(base.Controls);
 			Settings.UpdateComponentTextsFromLanguageXmlData(this);
 			DispData();
 		}
@@ -755,13 +755,13 @@ namespace DMR
 		private void method_3(CustomCombo class4_0)
 		{
 			int num = 0;
-			class4_0.method_0();
-			class4_0.method_1(Settings.SZ_NONE, 255);
+			class4_0.ClearItems();
+			class4_0.AddItem(Settings.SZ_NONE, 255);
 			for (num = 0; num <= 250; num++)
 			{
 				if (ZoneForm.data.ZoneChIsValid(num))
 				{
-					class4_0.method_1(ZoneForm.data.GetName(num), num);
+					class4_0.AddItem(ZoneForm.data.GetName(num), num);
 				}
 			}
 		}
@@ -770,10 +770,10 @@ namespace DMR
 		{
 			int num = 0;
 			int num2 = 0;
-			class4_0.method_0();
+			class4_0.ClearItems();
 			if (int_0 == 255)
 			{
-				class4_0.method_1(Settings.SZ_NONE, 255);
+				class4_0.AddItem(Settings.SZ_NONE, 255);
 				return;
 			}
 			for (num = 0; num < 16; num++)
@@ -781,14 +781,14 @@ namespace DMR
 				num2 = ZoneForm.data[int_0].ChList[num] - 1;
 				if (num2 >= 0 && num2 < ChannelForm.CurCntCh && ChannelForm.data.DataIsValid(num2))
 				{
-					class4_0.method_1(ChannelForm.data.GetName(num2), num);
+					class4_0.AddItem(ChannelForm.data.GetName(num2), num);
 				}
 			}
 		}
 
 		private void cmbCallZone_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			int int_ = cmbCallZone.method_3();
+			int int_ = cmbCallZone.GetSelectedValue();
 			method_4(int_, cmbCallCh);
 			if (cmbCallCh.Items.Count > 0)
 			{

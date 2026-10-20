@@ -107,7 +107,7 @@ namespace DMR
 
 		public static bool oldUSBBufferSize = true;
 
-		private IContainer components;
+		private IContainer components = null;
 
 		private Button btnBackupEEPROM;
 

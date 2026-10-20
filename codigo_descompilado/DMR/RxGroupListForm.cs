@@ -393,18 +393,18 @@ namespace DMR
 			tsbtnAdd.Image = (Image)componentResourceManager.GetObject("tsbtnAdd.Image");
 			tsbtnNext.Image = (Image)componentResourceManager.GetObject("tsbtnNext.Image");
 			base.Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
-			Scale(Settings.smethod_6());
+			Scale(Settings.GetFactor());
 		}
 
 		private void method_1()
 		{
 			txtName.MaxByteLength = 15;
-			txtName.KeyPress += Settings.smethod_54;
+			txtName.KeyPress += Settings.ValidateKeyPressNone;
 		}
 
 		private void RxGroupListForm_Load(object sender, EventArgs e)
 		{
-			Settings.smethod_59(base.Controls);
+			Settings.AttachHelpHandlers(base.Controls);
 			Settings.UpdateComponentTextsFromLanguageXmlData(this);
 			method_1();
 			DispData();
@@ -426,7 +426,7 @@ namespace DMR
 			{
 				num = lstSelected.Items.Count;
 				SelectedItemUtils selectedItemUtils = (SelectedItemUtils)lstUnselected.SelectedItems[0];
-				selectedItemUtils.method_1(num);
+				selectedItemUtils.SetDisplayNumber(num);
 				num3 = lstSelected.Items.Add(selectedItemUtils);
 				lstSelected.SetSelected(num3, value: true);
 				lstUnselected.Items.RemoveAt(lstUnselected.SelectedIndices[0]);
@@ -458,7 +458,7 @@ namespace DMR
 			{
 				SelectedItemUtils selectedItemUtils = (SelectedItemUtils)lstSelected.SelectedItems[0];
 				num = method_2(selectedItemUtils);
-				selectedItemUtils.method_1(-1);
+				selectedItemUtils.SetDisplayNumber(-1);
 				lstUnselected.Items.Insert(num, selectedItemUtils);
 				lstUnselected.SetSelected(num, value: true);
 				lstSelected.Items.RemoveAt(lstSelected.SelectedIndices[0]);
@@ -548,9 +548,9 @@ namespace DMR
 			for (num = 0; num < lstSelected.Items.Count; num++)
 			{
 				SelectedItemUtils selectedItemUtils = (SelectedItemUtils)lstSelected.Items[num];
-				if (selectedItemUtils.method_0() != num)
+				if (selectedItemUtils.GetDisplayNumber() != num)
 				{
-					selectedItemUtils.method_1(num);
+					selectedItemUtils.SetDisplayNumber(num);
 					bool selected = lstSelected.GetSelected(num);
 					lstSelected.Items[num] = selectedItemUtils;
 					if (selected)
@@ -577,7 +577,7 @@ namespace DMR
 			txtName.Text = txtName.Text.Trim();
 			if (Node.Text != txtName.Text)
 			{
-				if (Settings.smethod_50(Node, txtName.Text))
+				if (Settings.SiblingNameExists(Node, txtName.Text))
 				{
 					txtName.Text = Node.Text;
 				}

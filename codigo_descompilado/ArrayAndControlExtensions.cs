@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-internal static class Class16
+internal static class ArrayAndControlExtensions
 {
 	public static void Fill<templateType>(this templateType[] arrayData, templateType fillValue) where templateType : struct
 	{
@@ -36,7 +36,7 @@ internal static class Class16
 		arrayData[i] = default(templateType);
 	}
 
-	public static void smethod_3<templateType>(this templateType[] arrayData, int int_0, templateType item) where templateType : struct
+	public static void RemoveItemAndAppend<templateType>(this templateType[] arrayData, int int_0, templateType item) where templateType : struct
 	{
 		int i;
 		for (i = int_0; i < arrayData.Length - 1; i++)
@@ -46,7 +46,7 @@ internal static class Class16
 		arrayData[i] = item;
 	}
 
-	public static bool smethod_4(this byte[] byte_0, byte[] byte_1)
+	public static bool StartsWithBytes(this byte[] byte_0, byte[] byte_1)
 	{
 		if (byte_0.Length < byte_1.Length)
 		{
@@ -70,38 +70,38 @@ internal static class Class16
 		return false;
 	}
 
-	public static List<TreeNode> smethod_5(this TreeView treeView_0)
+	public static List<TreeNode> GetAllNodes(this TreeView treeView_0)
 	{
 		List<TreeNode> list = new List<TreeNode>();
 		foreach (TreeNode node in treeView_0.Nodes)
 		{
-			list.AddRange(node.smethod_6());
+			list.AddRange(node.GetNodeAndDescendants());
 		}
 		return list;
 	}
 
-	public static List<TreeNode> smethod_6(this TreeNode treeNode_0)
+	public static List<TreeNode> GetNodeAndDescendants(this TreeNode treeNode_0)
 	{
 		List<TreeNode> list = new List<TreeNode>();
 		list.Add(treeNode_0);
 		foreach (TreeNode node in treeNode_0.Nodes)
 		{
-			list.AddRange(node.smethod_6());
+			list.AddRange(node.GetNodeAndDescendants());
 		}
 		return list;
 	}
 
-	public static List<ToolStripMenuItem> smethod_7(this MenuStrip menuStrip_0)
+	public static List<ToolStripMenuItem> GetAllMenuItems(this MenuStrip menuStrip_0)
 	{
 		List<ToolStripMenuItem> list = new List<ToolStripMenuItem>();
 		foreach (ToolStripMenuItem item in menuStrip_0.Items)
 		{
-			list.AddRange(item.smethod_8());
+			list.AddRange(item.GetMenuItemAndDescendants());
 		}
 		return list;
 	}
 
-	public static List<ToolStripMenuItem> smethod_8(this ToolStripMenuItem toolStripMenuItem_0)
+	public static List<ToolStripMenuItem> GetMenuItemAndDescendants(this ToolStripMenuItem toolStripMenuItem_0)
 	{
 		List<ToolStripMenuItem> list = new List<ToolStripMenuItem>();
 		list.Add(toolStripMenuItem_0);
@@ -110,43 +110,43 @@ internal static class Class16
 			if (dropDownItem is ToolStripMenuItem)
 			{
 				ToolStripMenuItem toolStripMenuItem_1 = dropDownItem as ToolStripMenuItem;
-				list.AddRange(toolStripMenuItem_1.smethod_8());
+				list.AddRange(toolStripMenuItem_1.GetMenuItemAndDescendants());
 			}
 		}
 		return list;
 	}
 
-	public static List<ToolStripMenuItem> smethod_9(this ContextMenuStrip contextMenuStrip_0)
+	public static List<ToolStripMenuItem> GetAllContextMenuItems(this ContextMenuStrip contextMenuStrip_0)
 	{
 		List<ToolStripMenuItem> list = new List<ToolStripMenuItem>();
 		foreach (ToolStripItem item in contextMenuStrip_0.Items)
 		{
 			if (item is ToolStripMenuItem toolStripMenuItem_)
 			{
-				list.AddRange(toolStripMenuItem_.smethod_8());
+				list.AddRange(toolStripMenuItem_.GetMenuItemAndDescendants());
 			}
 		}
 		return list;
 	}
 
-	public static List<ToolStripItem> smethod_10(this ToolStrip toolStrip_0)
+	public static List<ToolStripItem> GetAllToolStripItems(this ToolStrip toolStrip_0)
 	{
 		List<ToolStripItem> list = new List<ToolStripItem>();
 		foreach (ToolStripItem item in toolStrip_0.Items)
 		{
-			list.AddRange(item.smethod_11());
+			list.AddRange(item.GetLeafToolStripItems());
 		}
 		return list;
 	}
 
-	public static List<ToolStripItem> smethod_11(this ToolStripItem toolStripItem_0)
+	public static List<ToolStripItem> GetLeafToolStripItems(this ToolStripItem toolStripItem_0)
 	{
 		List<ToolStripItem> list = new List<ToolStripItem>();
 		if (toolStripItem_0 is ToolStripDropDownItem)
 		{
 			foreach (ToolStripItem dropDownItem in (toolStripItem_0 as ToolStripDropDownItem).DropDownItems)
 			{
-				list.AddRange(dropDownItem.smethod_11());
+				list.AddRange(dropDownItem.GetLeafToolStripItems());
 			}
 			return list;
 		}
@@ -157,17 +157,17 @@ internal static class Class16
 		return list;
 	}
 
-	public static List<Control> smethod_12(this Form form_0)
+	public static List<Control> GetTranslatableControls(this Form form_0)
 	{
 		List<Control> list = new List<Control>();
 		foreach (Control control in form_0.Controls)
 		{
-			list.AddRange(control.smethod_13());
+			list.AddRange(control.GetTranslatableControlsRecursive());
 		}
 		return list;
 	}
 
-	public static List<Control> smethod_13(this Control control_0)
+	public static List<Control> GetTranslatableControlsRecursive(this Control control_0)
 	{
 		List<Control> list = new List<Control>();
 		if (control_0 is GroupBox)
@@ -176,7 +176,7 @@ internal static class Class16
 			{
 				foreach (Control control in control_0.Controls)
 				{
-					list.AddRange(control.smethod_13());
+					list.AddRange(control.GetTranslatableControlsRecursive());
 				}
 				return list;
 			}
@@ -185,7 +185,7 @@ internal static class Class16
 		{
 			foreach (Control control2 in control_0.Controls)
 			{
-				list.AddRange(control2.smethod_13());
+				list.AddRange(control2.GetTranslatableControlsRecursive());
 			}
 			return list;
 		}

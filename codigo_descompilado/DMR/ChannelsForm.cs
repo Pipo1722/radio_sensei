@@ -84,14 +84,14 @@ namespace DMR
 		{
 			InitializeComponent();
 			base.Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
-			Scale(Settings.smethod_6());
+			Scale(Settings.GetFactor());
 		}
 
 		public static void RefreshCommonLang()
 		{
 			string name = typeof(ChannelsForm).Name;
-			Settings.smethod_78("DisplayHeaderText", SZ_DISPLAY_HEADER_TEXT, name);
-			Settings.smethod_78("ExportHeaderText", SZ_EXPORT_HEADER_TEXT, name);
+			Settings.LoadSectionStringArray("DisplayHeaderText", SZ_DISPLAY_HEADER_TEXT, name);
+			Settings.LoadSectionStringArray("ExportHeaderText", SZ_EXPORT_HEADER_TEXT, name);
 			SZ_EXPORT_HEADER_TEXT[SZ_EXPORT_HEADER_TEXT.Length - 1] = "Optional DMRID";
 		}
 
@@ -196,9 +196,9 @@ namespace DMR
 				dataGridViewTextBoxColumn.Width = array[num++];
 				dgvChannels.Columns.Add(dataGridViewTextBoxColumn);
 			}
-			Settings.smethod_37(cmbAddChMode, ChannelForm.SZ_CH_MODE);
-			Settings.smethod_37(cmbChMode, ChannelForm.SZ_CH_MODE);
-			Settings.smethod_37(cmbPower, ChannelForm.SZ_POWER);
+			Settings.FillComboBox(cmbAddChMode, ChannelForm.SZ_CH_MODE);
+			Settings.FillComboBox(cmbChMode, ChannelForm.SZ_CH_MODE);
+			Settings.FillComboBox(cmbPower, ChannelForm.SZ_POWER);
 			txtName.MaxLength = 16;
 			txtRxFreq.MaxLength = 9;
 			txtTxFreq.MaxLength = 9;

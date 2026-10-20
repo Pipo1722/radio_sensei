@@ -67,17 +67,17 @@ namespace UsbLibrary
 					catch (Exception ex)
 					{
 						Console.WriteLine(ex.Message);
-						throw GException0.GenerateWithWinError("Failed to get the detailed data from the hid.");
+						throw HIDDeviceException.GenerateWithWinError("Failed to get the detailed data from the hid.");
 					}
 					finally
 					{
 						Win32Usb.HidD_FreePreparsedData(ref lpData);
 					}
 				}
-				throw GException0.GenerateWithWinError("GetPreparsedData failed");
+				throw HIDDeviceException.GenerateWithWinError("GetPreparsedData failed");
 			}
 			m_hHandle = IntPtr.Zero;
-			throw GException0.GenerateWithWinError("Failed to create device file");
+			throw HIDDeviceException.GenerateWithWinError("Failed to create device file");
 		}
 
 		protected bool BeginAsyncRead(byte[] data)
@@ -148,7 +148,7 @@ namespace UsbLibrary
 			catch (IOException ex)
 			{
 				Console.WriteLine(ex.ToString());
-				throw new GException0("Probaly the device was removed");
+				throw new HIDDeviceException("Probaly the device was removed");
 			}
 			catch (Exception ex2)
 			{
@@ -208,7 +208,7 @@ namespace UsbLibrary
 			}
 			catch (Exception ex)
 			{
-				throw GException0.GenerateError(ex.ToString());
+				throw HIDDeviceException.GenerateError(ex.ToString());
 			}
 			finally
 			{

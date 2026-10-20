@@ -58,11 +58,11 @@ namespace DMR
 			{
 				get
 				{
-					return Settings.smethod_25(name);
+					return Settings.Gb2312BytesToString(name);
 				}
 				set
 				{
-					byte[] array = Settings.smethod_23(value);
+					byte[] array = Settings.StringToGb2312Bytes(value);
 					name.Fill(byte.MaxValue);
 					Array.Copy(array, 0, name, 0, Math.Min(array.Length, name.Length));
 				}
@@ -191,11 +191,11 @@ namespace DMR
 			{
 				get
 				{
-					return Settings.smethod_25(comment);
+					return Settings.Gb2312BytesToString(comment);
 				}
 				set
 				{
-					byte[] array = Settings.smethod_23(value);
+					byte[] array = Settings.StringToGb2312Bytes(value);
 					comment.Fill((byte)0);
 					Array.Copy(array, 0, comment, 0, Math.Min(array.Length, comment.Length));
 				}
@@ -205,11 +205,11 @@ namespace DMR
 			{
 				get
 				{
-					return Settings.smethod_25(via1);
+					return Settings.Gb2312BytesToString(via1);
 				}
 				set
 				{
-					byte[] array = Settings.smethod_23(value);
+					byte[] array = Settings.StringToGb2312Bytes(value);
 					via1.Fill((byte)0);
 					Array.Copy(array, 0, via1, 0, Math.Min(array.Length, via1.Length));
 				}
@@ -219,11 +219,11 @@ namespace DMR
 			{
 				get
 				{
-					return Settings.smethod_25(via2);
+					return Settings.Gb2312BytesToString(via2);
 				}
 				set
 				{
-					byte[] array = Settings.smethod_23(value);
+					byte[] array = Settings.StringToGb2312Bytes(value);
 					via2.Fill((byte)0);
 					Array.Copy(array, 0, via2, 0, Math.Min(array.Length, via2.Length));
 				}
@@ -637,7 +637,7 @@ namespace DMR
 			{
 				int minIndex = GetMinIndex();
 				string text = string.Format(Format, minIndex + 1);
-				if (!Settings.smethod_51(node, text))
+				if (!Settings.ChildNameExists(node, text))
 				{
 					return text;
 				}
@@ -647,7 +647,7 @@ namespace DMR
 					if (num < Count)
 					{
 						text = string.Format(Format, num + 1);
-						if (!Settings.smethod_51(node, text))
+						if (!Settings.ChildNameExists(node, text))
 						{
 							break;
 						}
@@ -1104,7 +1104,7 @@ namespace DMR
 			this.txtTxFrequency.AccessibleName = "APRSConfiguationName";
 			this.txtTxFrequency.Location = new System.Drawing.Point(244, 354);
 			this.txtTxFrequency.MaxLength = 9;
-			this.txtTxFrequency.KeyPress += new System.Windows.Forms.KeyPressEventHandler(Settings.smethod_55);
+			this.txtTxFrequency.KeyPress += new System.Windows.Forms.KeyPressEventHandler(Settings.ValidateKeyPressDecimal);
 			this.txtTxFrequency.Name = "txtTxFrequency";
 			this.txtTxFrequency.Size = new System.Drawing.Size(105, 23);
 			this.txtTxFrequency.TabIndex = 15;
@@ -1268,7 +1268,7 @@ namespace DMR
 			cmbVia2SSID.Items.AddRange(array);
 			cmbTxSSID.Items.AddRange(array);
 			base.Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
-			Scale(Settings.smethod_6());
+			Scale(Settings.GetFactor());
 			singleton = this;
 		}
 
@@ -1307,7 +1307,7 @@ namespace DMR
 
 		private void APRSForm_Load(object sender, EventArgs e)
 		{
-			Settings.smethod_59(base.Controls);
+			Settings.AttachHelpHandlers(base.Controls);
 			Settings.UpdateComponentTextsFromLanguageXmlData(this);
 		}
 
@@ -1321,7 +1321,7 @@ namespace DMR
 			txtName.Text = txtName.Text.Trim();
 			if (Node.Text != txtName.Text)
 			{
-				if (Settings.smethod_50(Node, txtName.Text))
+				if (Settings.SiblingNameExists(Node, txtName.Text))
 				{
 					txtName.Text = Node.Text;
 				}

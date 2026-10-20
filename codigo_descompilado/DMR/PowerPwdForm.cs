@@ -18,7 +18,7 @@ namespace DMR
 		{
 			InitializeComponent();
 			base.Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
-			Scale(Settings.smethod_6());
+			Scale(Settings.GetFactor());
 		}
 
 		private void PowerPwdForm_Load(object sender, EventArgs e)
@@ -35,13 +35,13 @@ namespace DMR
 			{
 				string string_ = Base64Utils.smethod_0(txtPwd.Text.Trim());
 				IniFileUtils.WriteProfileString("setup", "Power", string_);
-				Settings.smethod_5(Settings.UserMode.Expert);
+				Settings.SetUserMode(Settings.UserMode.Expert);
 				Settings.CUR_MODE = 1;
 			}
 			else if (txtPwd.Text == "TYT760")
 			{
 				string string_2 = Base64Utils.smethod_0(txtPwd.Text.Trim());
-				Settings.smethod_5(Settings.UserMode.Expert);
+				Settings.SetUserMode(Settings.UserMode.Expert);
 				Settings.CUR_MODE = 2;
 				IniFileUtils.WriteProfileString("setup", "Power", string_2);
 			}

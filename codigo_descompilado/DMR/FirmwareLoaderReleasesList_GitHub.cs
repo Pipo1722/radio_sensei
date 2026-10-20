@@ -13,7 +13,7 @@ namespace DMR
 
 		public string SelectedVersion = "";
 
-		private IContainer components;
+		private IContainer components = null;
 
 		private DataGridView releasesGridView;
 

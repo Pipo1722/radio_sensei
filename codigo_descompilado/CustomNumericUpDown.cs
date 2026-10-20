@@ -10,7 +10,7 @@ internal class CustomNumericUpDown : NumericUpDown
 
 	private string _003CReplaceString_003Ek__BackingField;
 
-	public void method_0(int int_0)
+	public void SetMaxTextLength(int int_0)
 	{
 		if (base.Controls[1] is TextBox textBox)
 		{
@@ -19,37 +19,37 @@ internal class CustomNumericUpDown : NumericUpDown
 	}
 
 	[CompilerGenerated]
-	public string method_1()
+	public string GetInputString()
 	{
 		return _003CInputString_003Ek__BackingField;
 	}
 
 	[CompilerGenerated]
-	public void method_2(string string_0)
+	public void SetInputString(string string_0)
 	{
 		_003CInputString_003Ek__BackingField = string_0;
 	}
 
 	[CompilerGenerated]
-	public decimal method_3()
+	public decimal GetReplaceValue()
 	{
 		return _003CReplaceValue_003Ek__BackingField;
 	}
 
 	[CompilerGenerated]
-	public void method_4(decimal decimal_0)
+	public void SetReplaceValue(decimal decimal_0)
 	{
 		_003CReplaceValue_003Ek__BackingField = decimal_0;
 	}
 
 	[CompilerGenerated]
-	public string method_5()
+	public string GetReplaceString()
 	{
 		return _003CReplaceString_003Ek__BackingField;
 	}
 
 	[CompilerGenerated]
-	public void method_6(string string_0)
+	public void SetReplaceString(string string_0)
 	{
 		_003CReplaceString_003Ek__BackingField = string_0;
 	}
@@ -106,7 +106,7 @@ internal class CustomNumericUpDown : NumericUpDown
 
 	protected override void OnTextBoxKeyPress(object source, KeyPressEventArgs e)
 	{
-		if (!string.IsNullOrEmpty(method_1()) && method_1().IndexOf(e.KeyChar) < 0)
+		if (!string.IsNullOrEmpty(GetInputString()) && GetInputString().IndexOf(e.KeyChar) < 0)
 		{
 			e.Handled = true;
 		}
@@ -118,9 +118,9 @@ internal class CustomNumericUpDown : NumericUpDown
 
 	protected override void UpdateEditText()
 	{
-		if (method_5() != null && method_5().Length != 0 && base.Value == method_3())
+		if (GetReplaceString() != null && GetReplaceString().Length != 0 && base.Value == GetReplaceValue())
 		{
-			Text = method_5();
+			Text = GetReplaceString();
 		}
 		else
 		{

@@ -196,11 +196,11 @@ namespace DMR
 			{
 				get
 				{
-					return Settings.smethod_25(name);
+					return Settings.Gb2312BytesToString(name);
 				}
 				set
 				{
-					byte[] array = Settings.smethod_23(value);
+					byte[] array = Settings.StringToGb2312Bytes(value);
 					name.Fill(byte.MaxValue);
 					Array.Copy(array, 0, name, 0, Math.Min(array.Length, name.Length));
 				}
@@ -240,7 +240,7 @@ namespace DMR
 				}
 			}
 
-			public uint UInt32_0
+			public uint RxFreqBcd
 			{
 				get
 				{
@@ -256,11 +256,11 @@ namespace DMR
 			{
 				get
 				{
-					return Settings.smethod_34(rxFreq);
+					return Settings.Bcd32ToDecimal(rxFreq);
 				}
 				set
 				{
-					rxFreq = Settings.smethod_35(value);
+					rxFreq = Settings.DecimalToBcd32(value);
 				}
 			}
 
@@ -298,7 +298,7 @@ namespace DMR
 				}
 			}
 
-			public uint UInt32_1
+			public uint TxFreqBcd
 			{
 				get
 				{
@@ -314,11 +314,11 @@ namespace DMR
 			{
 				get
 				{
-					return Settings.smethod_34(txFreq);
+					return Settings.Bcd32ToDecimal(txFreq);
 				}
 				set
 				{
-					txFreq = Settings.smethod_35(value);
+					txFreq = Settings.DecimalToBcd32(value);
 				}
 			}
 
@@ -552,7 +552,7 @@ namespace DMR
 						{
 							return $"D{rxTone & 0xFFF:x3}N";
 						}
-						double num = (double)(int)Settings.smethod_32(rxTone) * 0.1;
+						double num = (double)(int)Settings.Bcd16ToDecimal(rxTone) * 0.1;
 						if (num > 60.0 && num < 260.0)
 						{
 							return num.ToString("f1");
@@ -584,7 +584,7 @@ namespace DMR
 					double num = double.Parse(value);
 					if (num > 60.0 && num < 260.0)
 					{
-						rxTone = Settings.smethod_33(Convert.ToUInt16(num * 10.0));
+						rxTone = Settings.DecimalToBcd16(Convert.ToUInt16(num * 10.0));
 					}
 				}
 			}
@@ -603,7 +603,7 @@ namespace DMR
 						{
 							return $"D{txTone & 0xFFF:x3}N";
 						}
-						double num = (double)(int)Settings.smethod_32(txTone) * 0.1;
+						double num = (double)(int)Settings.Bcd16ToDecimal(txTone) * 0.1;
 						if (num > 60.0 && num < 260.0)
 						{
 							return num.ToString("f1");
@@ -635,7 +635,7 @@ namespace DMR
 					double num = double.Parse(value);
 					if (num > 60.0 && num < 260.0)
 					{
-						txTone = Settings.smethod_33(Convert.ToUInt16(num * 10.0));
+						txTone = Settings.DecimalToBcd16(Convert.ToUInt16(num * 10.0));
 					}
 				}
 			}
@@ -1420,8 +1420,8 @@ namespace DMR
 
 			public void SetDefaultFreq(int index)
 			{
-				chList[index].UInt32_0 = Settings.smethod_35(Settings.MIN_FREQ[0] * 100000);
-				chList[index].UInt32_1 = chList[index].UInt32_0;
+				chList[index].RxFreqBcd = Settings.DecimalToBcd32(Settings.MIN_FREQ[0] * 100000);
+				chList[index].TxFreqBcd = chList[index].RxFreqBcd;
 			}
 
 			public byte[] ToEerom()
@@ -2700,17 +2700,17 @@ namespace DMR
 			value.ArtsInterval = data[index].ArtsInterval;
 			value.Key = data[index].Key;
 			value.TxTone = cmbTxTone.Text;
-			value.TaTxTS1 = cmbTS1TaTx.method_3();
-			value.TaTxTS2 = cmbTS2TaTx.method_3();
+			value.TaTxTS1 = cmbTS1TaTx.GetSelectedValue();
+			value.TaTxTS2 = cmbTS2TaTx.GetSelectedValue();
 			value.DualCapacity = chkDualCapacity.Checked;
 			value.TimingPreference = cmbTimingPreference.SelectedIndex;
 			value.RepateSlot = cmbRepeaterSlot.SelectedIndex;
 			value.Ars = cmbArs.SelectedIndex;
 			value.KeySwitch = cmbKeySwitch.SelectedIndex;
-			value.RxGroupList = cmbRxGroup.method_3();
+			value.RxGroupList = cmbRxGroup.GetSelectedValue();
 			value.TxColor = nudTxColor.Value;
-			value.APRS_System = cmbAPRS_System.method_3();
-			value.Contact = cmbContact.method_3();
+			value.APRS_System = cmbAPRS_System.GetSelectedValue();
+			value.Contact = cmbContact.GetSelectedValue();
 			value.AllowTxInterupt = chkAllowTxInterupt.Checked;
 			value.TxInteruptFreq = chkTxInteruptFreq.Checked;
 			value.OffsetStep = cmbOffsetStep.SelectedIndex;
@@ -2738,7 +2738,7 @@ namespace DMR
 				channelOne.RxGroupList = 0;
 				channelOne.Contact = 0;
 			}
-			method_2();
+			RefreshComboDataSources();
 			cmbChMode.SelectedIndex = channelOne.ChMode;
 			txtName.Text = Text;
 			txtRxFreq.Text = channelOne.RxFreq;
@@ -2749,7 +2749,7 @@ namespace DMR
 			chkOpenGD77ScanZoneSkip.Checked = channelOne.AutoScan;
 			chkOpenGD77ScanAllSkip.Checked = channelOne.LoneWoker;
 			chkRxOnly.Checked = channelOne.OnlyRx;
-			method_14(channelOne.RxTone);
+			UpdateSteOptionsForTone(channelOne.RxTone);
 			cmbChBandwidth.SelectedIndex = channelOne.Bandwidth;
 			cmbSql.SelectedIndex = channelOne.Sql;
 			cmbSte.SelectedIndex = channelOne.Ste;
@@ -2760,21 +2760,21 @@ namespace DMR
 			chkNoEco.Checked = channelOne.LibreDMR_NoEcoChannel;
 			chkDMRForceDMO.Checked = channelOne.LibreDMR_DMRForceDMO;
 			cmbTxTone.Text = channelOne.TxTone;
-			cmbTS1TaTx.method_2(channelOne.TaTxTS1);
-			cmbTS2TaTx.method_2(channelOne.TaTxTS2);
+			cmbTS1TaTx.SelectByValue(channelOne.TaTxTS1);
+			cmbTS2TaTx.SelectByValue(channelOne.TaTxTS2);
 			chkDualCapacity.Checked = channelOne.DualCapacity;
 			cmbTimingPreference.SelectedIndex = channelOne.TimingPreference;
 			cmbRepeaterSlot.SelectedIndex = channelOne.RepateSlot;
 			cmbArs.SelectedIndex = channelOne.Ars;
 			cmbKeySwitch.SelectedIndex = channelOne.KeySwitch;
-			cmbRxGroup.method_2(channelOne.RxGroupList);
+			cmbRxGroup.SelectByValue(channelOne.RxGroupList);
 			nudTxColor.Value = channelOne.TxColor;
-			cmbAPRS_System.method_2(channelOne.APRS_System);
-			cmbContact.method_2(channelOne.Contact);
+			cmbAPRS_System.SelectByValue(channelOne.APRS_System);
+			cmbContact.SelectByValue(channelOne.Contact);
 			chkAllowTxInterupt.Checked = channelOne.AllowTxInterupt;
 			chkTxInteruptFreq.Checked = channelOne.TxInteruptFreq;
 			cmbOffsetStep.SelectedIndex = channelOne.OffsetStep;
-			method_17();
+			UpdateToneDependentControls();
 		}
 
 		public void RefreshName()
@@ -2790,77 +2790,77 @@ namespace DMR
 			CurCntCh = 1024;
 		}
 
-		private void method_1()
+		private void InitializeControls()
 		{
-			Settings.smethod_37(cmbChMode, SZ_CH_MODE);
+			Settings.FillComboBox(cmbChMode, SZ_CH_MODE);
 			txtName.MaxByteLength = 15;
-			txtName.KeyPress += Settings.smethod_54;
+			txtName.KeyPress += Settings.ValidateKeyPressNone;
 			txtRxFreq.MaxLength = 9;
-			txtRxFreq.KeyPress += Settings.smethod_55;
+			txtRxFreq.KeyPress += Settings.ValidateKeyPressDecimal;
 			txtTxFreq.MaxLength = 9;
-			txtTxFreq.KeyPress += Settings.smethod_55;
-			Settings.smethod_37(cmbLibreDMR_Power, SZ_LIBREDMR_POWER);
-			Settings.smethod_36(nudTot, new Class13(0, 33, 1, 15m, 3));
-			nudTot.method_4(0m);
-			nudTot.method_6("∞");
-			Settings.smethod_37(cmbChBandwidth, SZ_BANDWIDTH);
-			Settings.smethod_37(cmbSql, SZ_SQUELCH_LEVEL);
-			Settings.smethod_37(cmbVoiceEmphasis, SZ_VOICE_EMPHASIS);
-			Settings.smethod_37(cmbSte, SZ_STE);
-			Settings.smethod_37(cmbNonSte, SZ_NON_STE);
-			Settings.smethod_39(cmbTS1TaTx, ChannelForm.SZ_TA_TX);
-			Settings.smethod_39(cmbTS2TaTx, ChannelForm.SZ_TA_TX);
-			Settings.smethod_37(cmbTimingPreference, SZ_TIMING_PREFERENCE);
-			Settings.smethod_37(cmbRepeaterSlot, SZ_REPEATER_SOLT);
-			Settings.smethod_37(cmbArs, SZ_ARS);
-			Settings.smethod_37(cmbKeySwitch, SZ_KEY_SWITCH);
-			Settings.smethod_36(nudTxColor, new Class13(0, 15, 1, 1m, 2));
-			Settings.smethod_37(cmbOffsetStep, SZ_OFFSET_STEP);
+			txtTxFreq.KeyPress += Settings.ValidateKeyPressDecimal;
+			Settings.FillComboBox(cmbLibreDMR_Power, SZ_LIBREDMR_POWER);
+			Settings.ApplyNumericRange(nudTot, new NumericRange(0, 33, 1, 15m, 3));
+			nudTot.SetReplaceValue(0m);
+			nudTot.SetReplaceString("∞");
+			Settings.FillComboBox(cmbChBandwidth, SZ_BANDWIDTH);
+			Settings.FillComboBox(cmbSql, SZ_SQUELCH_LEVEL);
+			Settings.FillComboBox(cmbVoiceEmphasis, SZ_VOICE_EMPHASIS);
+			Settings.FillComboBox(cmbSte, SZ_STE);
+			Settings.FillComboBox(cmbNonSte, SZ_NON_STE);
+			Settings.FillCustomCombo(cmbTS1TaTx, ChannelForm.SZ_TA_TX);
+			Settings.FillCustomCombo(cmbTS2TaTx, ChannelForm.SZ_TA_TX);
+			Settings.FillComboBox(cmbTimingPreference, SZ_TIMING_PREFERENCE);
+			Settings.FillComboBox(cmbRepeaterSlot, SZ_REPEATER_SOLT);
+			Settings.FillComboBox(cmbArs, SZ_ARS);
+			Settings.FillComboBox(cmbKeySwitch, SZ_KEY_SWITCH);
+			Settings.ApplyNumericRange(nudTxColor, new NumericRange(0, 15, 1, 1m, 2));
+			Settings.FillComboBox(cmbOffsetStep, SZ_OFFSET_STEP);
 			txtRadioId.MaxLength = 8;
 			txtRadioId.InputString = "0123456789\b";
 		}
 
-		private void method_2()
+		private void RefreshComboDataSources()
 		{
-			Settings.smethod_44(cmbRxGroup, RxGroupListForm.data);
-			Settings.smethod_44(cmbAPRS_System, APRSForm.data);
-			Settings.smethod_44(cmbContact, ContactForm.data, Settings.SZ_NA);
+			Settings.FillCustomComboFromData(cmbRxGroup, RxGroupListForm.data);
+			Settings.FillCustomComboFromData(cmbAPRS_System, APRSForm.data);
+			Settings.FillCustomComboFromData(cmbContact, ContactForm.data, Settings.SZ_NA);
 		}
 
 		public static void RefreshCommonLang()
 		{
 			string name = typeof(VfoForm).Name;
-			Settings.smethod_78("ChMode", SZ_CH_MODE, name);
-			Settings.smethod_78("RefFreq", SZ_REF_FREQ, name);
-			Settings.smethod_78("RefFreq", SZ_REF_FREQ, name);
-			Settings.smethod_78("LibreDMR_Power", SZ_LIBREDMR_POWER, name);
-			Settings.smethod_78("Power", SZ_POWER, name);
-			Settings.smethod_78("AdmitCriterica", SZ_ADMIT_CRITERICA, name);
-			Settings.smethod_78("AdmitCritericaD", SZ_ADMIT_CRITERICA_D, name);
-			Settings.smethod_78("Squelch", SZ_SQUELCH, name);
-			Settings.smethod_78("SquelchLevel", SZ_SQUELCH_LEVEL, name);
-			Settings.smethod_78("VoiceEmphasis", SZ_VOICE_EMPHASIS, name);
-			Settings.smethod_78("Ste", SZ_STE, name);
-			Settings.smethod_78("NonSte", SZ_NON_STE, name);
-			Settings.smethod_78("SignalingSystem", SZ_SIGNALING_SYSTEM, name);
-			Settings.smethod_78("UnmuteRule", SZ_UNMUTE_RULE, name);
-			Settings.smethod_78("PttidType", SZ_PTTID_TYPE, name);
-			Settings.smethod_78("TaTx", ChannelForm.SZ_TA_TX, name);
-			Settings.smethod_78("TimingPreference", SZ_TIMING_PREFERENCE, name);
-			Settings.smethod_78("Ars", SZ_ARS, name);
-			Settings.smethod_78("KeySwitch", SZ_KEY_SWITCH, name);
-			Settings.smethod_78("OffsetDirection", SZ_OFFSET_DIRECTION, name);
+			Settings.LoadSectionStringArray("ChMode", SZ_CH_MODE, name);
+			Settings.LoadSectionStringArray("RefFreq", SZ_REF_FREQ, name);
+			Settings.LoadSectionStringArray("RefFreq", SZ_REF_FREQ, name);
+			Settings.LoadSectionStringArray("LibreDMR_Power", SZ_LIBREDMR_POWER, name);
+			Settings.LoadSectionStringArray("Power", SZ_POWER, name);
+			Settings.LoadSectionStringArray("AdmitCriterica", SZ_ADMIT_CRITERICA, name);
+			Settings.LoadSectionStringArray("AdmitCritericaD", SZ_ADMIT_CRITERICA_D, name);
+			Settings.LoadSectionStringArray("Squelch", SZ_SQUELCH, name);
+			Settings.LoadSectionStringArray("SquelchLevel", SZ_SQUELCH_LEVEL, name);
+			Settings.LoadSectionStringArray("VoiceEmphasis", SZ_VOICE_EMPHASIS, name);
+			Settings.LoadSectionStringArray("Ste", SZ_STE, name);
+			Settings.LoadSectionStringArray("NonSte", SZ_NON_STE, name);
+			Settings.LoadSectionStringArray("SignalingSystem", SZ_SIGNALING_SYSTEM, name);
+			Settings.LoadSectionStringArray("UnmuteRule", SZ_UNMUTE_RULE, name);
+			Settings.LoadSectionStringArray("PttidType", SZ_PTTID_TYPE, name);
+			Settings.LoadSectionStringArray("TaTx", ChannelForm.SZ_TA_TX, name);
+			Settings.LoadSectionStringArray("TimingPreference", SZ_TIMING_PREFERENCE, name);
+			Settings.LoadSectionStringArray("Ars", SZ_ARS, name);
+			Settings.LoadSectionStringArray("KeySwitch", SZ_KEY_SWITCH, name);
+			Settings.LoadSectionStringArray("OffsetDirection", SZ_OFFSET_DIRECTION, name);
 		}
 
 		private void VfoForm_Load(object sender, EventArgs e)
 		{
 			try
 			{
-				Settings.smethod_59(base.Controls);
+				Settings.AttachHelpHandlers(base.Controls);
 				Settings.UpdateComponentTextsFromLanguageXmlData(this);
-				data.ChModeChangeEvent += method_3;
+				data.ChModeChangeEvent += OnChannelModeChanged;
 				populateRxAndTxToneComboboxesFromToneTxtFile();
-				method_1();
+				InitializeControls();
 				int index = Convert.ToInt32(base.Tag);
 				txtRadioId.Text = data[index].LibreDMR_DMRidChannel;
 			}
@@ -2906,7 +2906,7 @@ namespace DMR
 			Node.ImageIndex = num;
 		}
 
-		private void method_3(object sender, ChModeChangeEventArgs e)
+		private void OnChannelModeChanged(object sender, ChModeChangeEventArgs e)
 		{
 			if (base.MdiParent is MainForm mainForm)
 			{
@@ -2980,10 +2980,10 @@ namespace DMR
 
 		private void chkRxOnly_CheckedChanged(object sender, EventArgs e)
 		{
-			method_4();
+			UpdateRxOnlyState();
 		}
 
-		private void method_4()
+		private void UpdateRxOnlyState()
 		{
 			bool enabled = !chkRxOnly.Checked;
 			txtTxFreq.Enabled = enabled;
@@ -2995,7 +2995,7 @@ namespace DMR
 		{
 		}
 
-		private void method_6()
+		private void RefreshChannelForms()
 		{
 			if (base.MdiParent is MainForm mainForm)
 			{
@@ -3017,7 +3017,7 @@ namespace DMR
 		{
 		}
 
-		private void method_7()
+		private void UpdateTimingPreferenceState()
 		{
 			cmbTimingPreference.Enabled = chkDualCapacity.Checked;
 		}
@@ -3064,7 +3064,7 @@ namespace DMR
 
 		private void cmbRxTone_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			method_17();
+			UpdateToneDependentControls();
 		}
 
 		private void cmbRxTone_KeyDown(object sender, KeyEventArgs e)
@@ -3121,7 +3121,7 @@ namespace DMR
 			}
 			finally
 			{
-				method_17();
+				UpdateToneDependentControls();
 			}
 		}
 
@@ -3180,19 +3180,19 @@ namespace DMR
 			}
 		}
 
-		private void method_14(string string_0)
+		private void UpdateSteOptionsForTone(string string_0)
 		{
 			if (new Regex("D[0-7]{3}[N|I]$").IsMatch(string_0))
 			{
-				Settings.smethod_37(cmbSte, new string[1] { SZ_STE[0] });
+				Settings.FillComboBox(cmbSte, new string[1] { SZ_STE[0] });
 			}
 			else
 			{
-				Settings.smethod_37(cmbSte, SZ_STE);
+				Settings.FillComboBox(cmbSte, SZ_STE);
 			}
 		}
 
-		private void method_17()
+		private void UpdateToneDependentControls()
 		{
 			double result = 0.0;
 			string text = cmbRxTone.Text;
@@ -3207,13 +3207,13 @@ namespace DMR
 			cmbNonSte.Enabled = false;
 			if (regex.IsMatch(text))
 			{
-				Settings.smethod_37(cmbSte, new string[1] { SZ_STE[0] });
+				Settings.FillComboBox(cmbSte, new string[1] { SZ_STE[0] });
 				cmbSte.SelectedIndex = 0;
 			}
 			else if (double.TryParse(text, out result))
 			{
 				string text2 = cmbSte.Text;
-				Settings.smethod_37(cmbSte, SZ_STE);
+				Settings.FillComboBox(cmbSte, SZ_STE);
 				if (cmbSte.FindString(text2) < 0)
 				{
 					cmbSte.SelectedIndex = 0;

@@ -42,11 +42,11 @@ namespace DMR
 			{
 				get
 				{
-					return Settings.smethod_25(name);
+					return Settings.Gb2312BytesToString(name);
 				}
 				set
 				{
-					byte[] array = Settings.smethod_23(value);
+					byte[] array = Settings.StringToGb2312Bytes(value);
 					name.Fill(byte.MaxValue);
 					Array.Copy(array, 0, name, 0, Math.Min(array.Length, name.Length));
 				}
@@ -741,7 +741,7 @@ namespace DMR
 				string text = "";
 				num2 = data.GetMinIndex();
 				text = string.Format(Format, num2 + 1);
-				if (!Settings.smethod_51(node, text))
+				if (!Settings.ChildNameExists(node, text))
 				{
 					return text;
 				}
@@ -751,7 +751,7 @@ namespace DMR
 					if (num < Count)
 					{
 						text = string.Format(Format, num + 1);
-						if (!Settings.smethod_51(node, text))
+						if (!Settings.ChildNameExists(node, text))
 						{
 							break;
 						}
@@ -1053,7 +1053,7 @@ namespace DMR
 
 		public void SaveData()
 		{
-			if (Settings.smethod_50(Node, txtCallsign.Text))
+			if (Settings.SiblingNameExists(Node, txtCallsign.Text))
 			{
 				return;
 			}
@@ -1069,7 +1069,7 @@ namespace DMR
 					ContactOne value = new ContactOne(num);
 					value.Name = txtCallsign.Text;
 					value.CallId = txtCallId.Text;
-					value.CallType = cmbCallType.method_3();
+					value.CallType = cmbCallType.GetSelectedValue();
 					value.CallRxTone = chkCallRxTone.Checked;
 					value.RingStyle = cmbRingStyle.SelectedIndex;
 					value.RepeaterSlot = cmbRepeaterSlot.SelectedIndex;
@@ -1103,7 +1103,7 @@ namespace DMR
 				cmbRingStyle.SelectedIndexChanged -= cmbRingStyle_SelectedIndexChanged;
 				txtCallsign.Text = data[num].Name;
 				txtCallId.Text = data[num].CallId;
-				cmbCallType.method_2(data[num].CallType);
+				cmbCallType.SelectByValue(data[num].CallType);
 				chkCallRxTone.Checked = data[num].CallRxTone;
 				cmbRingStyle.SelectedIndex = data[num].RingStyle;
 				cmbRepeaterSlot.SelectedIndex = data[num].RepeaterSlot;
@@ -1136,20 +1136,20 @@ namespace DMR
 		{
 			InitializeComponent();
 			base.Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
-			Scale(Settings.smethod_6());
+			Scale(Settings.GetFactor());
 		}
 
 		public void InitData()
 		{
 			int num = 0;
 			txtCallsign.MaxLength = 16;
-			txtCallsign.KeyPress += Settings.smethod_54;
+			txtCallsign.KeyPress += Settings.ValidateKeyPressNone;
 			txtCallId.MaxLength = 8;
 			num = 0;
 			cmbCallType.Items.Clear();
 			foreach (byte value in Enum.GetValues(typeof(CallTypeE)))
 			{
-				cmbCallType.method_1(SZ_CALL_TYPE[num++], value);
+				cmbCallType.AddItem(SZ_CALL_TYPE[num++], value);
 			}
 			cmbRingStyle.Items.Clear();
 			cmbRingStyle.Items.Add(Settings.SZ_NONE);
@@ -1168,7 +1168,7 @@ namespace DMR
 		{
 			try
 			{
-				Settings.smethod_59(base.Controls);
+				Settings.AttachHelpHandlers(base.Controls);
 				Settings.UpdateComponentTextsFromLanguageXmlData(this);
 				InitData();
 				DispData();
@@ -1188,13 +1188,13 @@ namespace DMR
 		public static void RefreshCommonLang()
 		{
 			string name = typeof(ContactForm).Name;
-			Settings.smethod_78("CallType", SZ_CALL_TYPE, name);
-			Settings.smethod_78("CallRxTone", SZ_CALL_RX_TONE, name);
+			Settings.LoadSectionStringArray("CallType", SZ_CALL_TYPE, name);
+			Settings.LoadSectionStringArray("CallRxTone", SZ_CALL_RX_TONE, name);
 		}
 
 		private void method_3()
 		{
-			int num = cmbCallType.method_3();
+			int num = cmbCallType.GetSelectedValue();
 			txtCallId.Enabled = true;
 			switch (num)
 			{
@@ -1238,7 +1238,7 @@ namespace DMR
 			txtCallsign.Text = txtCallsign.Text.Trim();
 			if (Node.Text != txtCallsign.Text)
 			{
-				if (Settings.smethod_50(Node, txtCallsign.Text))
+				if (Settings.SiblingNameExists(Node, txtCallsign.Text))
 				{
 					MessageBox.Show(Settings.dicCommon["ContactNameDuplicate"]);
 					return;

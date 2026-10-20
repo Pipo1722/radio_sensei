@@ -20,7 +20,7 @@ namespace DMR
 
 		private WebClient _wc;
 
-		private IContainer components;
+		private IContainer components = null;
 
 		private DataGridView dgvDownloadeContacts;
 
@@ -326,7 +326,7 @@ namespace DMR
 
 		private void DownloadContacts_Load(object sender, EventArgs e)
 		{
-			Settings.smethod_59(base.Controls);
+			Settings.AttachHelpHandlers(base.Controls);
 			Settings.UpdateComponentTextsFromLanguageXmlData(this);
 		}
 

@@ -173,13 +173,13 @@ namespace DMR
 			base.Load += APRSConfigsForm_Load;
 			InitializeComponent();
 			base.Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
-			Scale(Settings.smethod_6());
+			Scale(Settings.GetFactor());
 		}
 
 		public static void RefreshCommonLang()
 		{
 			string name = typeof(APRSConfigsForm).Name;
-			Settings.smethod_78("HeaderText", SZ_HEADER_TEXT, name);
+			Settings.LoadSectionStringArray("HeaderText", SZ_HEADER_TEXT, name);
 		}
 
 		private void APRSConfigsForm_Load(object sender, EventArgs e)

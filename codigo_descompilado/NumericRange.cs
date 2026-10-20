@@ -1,6 +1,6 @@
 using System.Runtime.CompilerServices;
 
-public class Class13
+public class NumericRange
 {
 	private int _minVal;
 
@@ -12,75 +12,75 @@ public class Class13
 
 	private int _MaxLen;
 
-	public Class13()
+	public NumericRange()
 	{
 	}
 
-	public Class13(int int_0, int int_1, int int_2, decimal decimal_0, int int_3)
+	public NumericRange(int int_0, int int_1, int int_2, decimal decimal_0, int int_3)
 	{
-		method_1(int_0);
-		method_3(int_1);
-		method_5(int_2);
-		method_7(decimal_0);
-		method_9(int_3);
+		SetMin(int_0);
+		SetMax(int_1);
+		SetIncrement(int_2);
+		SetScale(decimal_0);
+		SetMaxLength(int_3);
 	}
 
 	[CompilerGenerated]
-	public int method_0()
+	public int GetMin()
 	{
 		return _minVal;
 	}
 
 	[CompilerGenerated]
-	public void method_1(int int_0)
+	public void SetMin(int int_0)
 	{
 		_minVal = int_0;
 	}
 
 	[CompilerGenerated]
-	public int method_2()
+	public int GetMax()
 	{
 		return _maxVal;
 	}
 
 	[CompilerGenerated]
-	public void method_3(int int_0)
+	public void SetMax(int int_0)
 	{
 		_maxVal = int_0;
 	}
 
 	[CompilerGenerated]
-	public int method_4()
+	public int GetIncrement()
 	{
 		return _incVal;
 	}
 
 	[CompilerGenerated]
-	public void method_5(int int_0)
+	public void SetIncrement(int int_0)
 	{
 		_incVal = int_0;
 	}
 
 	[CompilerGenerated]
-	public decimal method_6()
+	public decimal GetScale()
 	{
 		return _SdVal;
 	}
 
 	[CompilerGenerated]
-	public void method_7(decimal decimal_0)
+	public void SetScale(decimal decimal_0)
 	{
 		_SdVal = decimal_0;
 	}
 
 	[CompilerGenerated]
-	public int method_8()
+	public int GetMaxLength()
 	{
 		return _MaxLen;
 	}
 
 	[CompilerGenerated]
-	public void method_9(int int_0)
+	public void SetMaxLength(int int_0)
 	{
 		_MaxLen = int_0;
 	}

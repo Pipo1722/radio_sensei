@@ -10,7 +10,7 @@ namespace DMR
 			InitializeComponent();
 			base.ClientSize = new Size(292, 246);
 			base.DockAreas = DockAreas.Float | DockAreas.DockLeft | DockAreas.DockRight | DockAreas.DockTop | DockAreas.DockBottom;
-			Scale(Settings.smethod_6());
+			Scale(Settings.GetFactor());
 		}
 
 		protected override void Dispose(bool disposing)

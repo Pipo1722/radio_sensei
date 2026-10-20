@@ -433,7 +433,7 @@ namespace DMR
 		{
 			InitializeComponent();
 			base.Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
-			Scale(Settings.smethod_6());
+			Scale(Settings.GetFactor());
 		}
 
 		private void method_0()
@@ -441,19 +441,19 @@ namespace DMR
 			nudRMDuration.Minimum = 10m;
 			nudRMDuration.Maximum = 120m;
 			nudRMDuration.Increment = 10m;
-			nudRMDuration.method_0(3);
+			nudRMDuration.SetMaxTextLength(3);
 			nudTxSyncWakeTot.Minimum = 125m;
 			nudTxSyncWakeTot.Maximum = 375m;
 			nudTxSyncWakeTot.Increment = 25m;
-			nudTxSyncWakeTot.method_0(3);
-			Settings.smethod_36(nudTxWakeMsgLimit, new Class13(0, 4, 1, 1m, 1));
-			Settings.smethod_36(nudSelCallHang, new Class13(0, 14, 1, 500m, 4));
-			Settings.smethod_36(nudAutoResetTimer, new Class13(1, 255, 1, 1m, 3));
+			nudTxSyncWakeTot.SetMaxTextLength(3);
+			Settings.ApplyNumericRange(nudTxWakeMsgLimit, new NumericRange(0, 4, 1, 1m, 1));
+			Settings.ApplyNumericRange(nudSelCallHang, new NumericRange(0, 14, 1, 500m, 4));
+			Settings.ApplyNumericRange(nudAutoResetTimer, new NumericRange(1, 255, 1, 1m, 3));
 		}
 
 		private void SignalingBasicForm_Load(object sender, EventArgs e)
 		{
-			Settings.smethod_59(base.Controls);
+			Settings.AttachHelpHandlers(base.Controls);
 			Settings.UpdateComponentTextsFromLanguageXmlData(this);
 			DispData();
 		}

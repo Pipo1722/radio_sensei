@@ -20,6 +20,7 @@ namespace DMR
 			public uint Reserved;
 		}
 
+#pragma warning disable CS0649, CS0169 // filled in by setupapi.dll
 		private struct SP_DEVICE_INTERFACE_DATA
 		{
 			public int cbSize;
@@ -30,6 +31,7 @@ namespace DMR
 
 			private UIntPtr reserved;
 		}
+#pragma warning restore CS0649, CS0169
 
 		[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
 		private struct SP_DEVICE_INTERFACE_DETAIL_DATA
@@ -106,6 +108,7 @@ namespace DMR
 						string text = Encoding.Unicode.GetString(array2, 0, (int)(RequiredSize - 2));
 						if (text.StartsWith(friendlyNamePrefix) && regex.IsMatch(text))
 						{
+							SetupDiDestroyDeviceInfoList(deviceInfoSet);
 							return regex.Match(text).Groups[1].Value;
 						}
 					}

@@ -9,7 +9,7 @@ namespace DMR
 	{
 		public string SelectedPort;
 
-		private IContainer components;
+		private IContainer components = null;
 
 		private ComboBox cmbPorts;
 

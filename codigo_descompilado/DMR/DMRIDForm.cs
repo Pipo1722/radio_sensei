@@ -62,7 +62,7 @@ namespace DMR
 
 		private string[] SEPARATORS_ARRAY = new string[2] { " ", "." };
 
-		private IContainer components;
+		private IContainer components = null;
 
 		private Button btnWriteToGD77;
 
@@ -657,7 +657,7 @@ namespace DMR
 
 		private void DMRIDForm_Load(object sender, EventArgs e)
 		{
-			Settings.smethod_59(base.Controls);
+			Settings.AttachHelpHandlers(base.Controls);
 			Settings.UpdateComponentTextsFromLanguageXmlData(this);
 			Settings.ReadCommonsForSectionIntoDictionary(StringsDict, "OpenGD77Form");
 		}

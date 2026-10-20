@@ -438,56 +438,56 @@ internal class Settings
 		return UserMode.Expert;
 	}
 
-	public static void smethod_5(UserMode userMode_0)
+	public static void SetUserMode(UserMode userMode_0)
 	{
 	}
 
 	[CompilerGenerated]
-	public static SizeF smethod_6()
+	public static SizeF GetFactor()
 	{
 		return _003CFactor_003Ek__BackingField;
 	}
 
 	[CompilerGenerated]
-	public static void smethod_7(SizeF sizeF_0)
+	public static void SetFactor(SizeF sizeF_0)
 	{
 		_003CFactor_003Ek__BackingField = sizeF_0;
 	}
 
 	[CompilerGenerated]
-	public static string smethod_8()
+	public static string GetCurUserPwd()
 	{
 		return _003CCurUserPwd_003Ek__BackingField;
 	}
 
 	[CompilerGenerated]
-	public static void smethod_9(string string_0)
+	public static void SetCurUserPwd(string string_0)
 	{
 		_003CCurUserPwd_003Ek__BackingField = string_0;
 	}
 
-	public static void smethod_10()
+	public static void LoadCommonStrings()
 	{
-		smethod_76("None", ref SZ_NONE);
-		smethod_76("Selected", ref SZ_SELECTED);
-		smethod_76("Add", ref SZ_ADD);
-		smethod_76("Off", ref SZ_OFF);
-		smethod_76("DeviceNotFound", ref SZ_DEVICE_NOT_FOUND);
-		smethod_76("CommError", ref SZ_COMM_ERROR);
-		smethod_76("Model does not match", ref SZ_MODEL_NOT_MATCH);
-		smethod_76("DataFormatError", ref SZ_DATA_FORMAT_ERROR);
-		smethod_76("N/A", ref SZ_NA);
+		LoadCommonString("None", ref SZ_NONE);
+		LoadCommonString("Selected", ref SZ_SELECTED);
+		LoadCommonString("Add", ref SZ_ADD);
+		LoadCommonString("Off", ref SZ_OFF);
+		LoadCommonString("DeviceNotFound", ref SZ_DEVICE_NOT_FOUND);
+		LoadCommonString("CommError", ref SZ_COMM_ERROR);
+		LoadCommonString("Model does not match", ref SZ_MODEL_NOT_MATCH);
+		LoadCommonString("DataFormatError", ref SZ_DATA_FORMAT_ERROR);
+		LoadCommonString("N/A", ref SZ_NA);
 	}
 
 	public static void ValidateNumberRangeWithDefault(ref byte byte_0, byte byte_1, byte byte_2, byte byte_3)
 	{
-		if (!smethod_12(byte_0, byte_1, byte_2))
+		if (!IsByteInRange(byte_0, byte_1, byte_2))
 		{
 			byte_0 = byte_3;
 		}
 	}
 
-	public static bool smethod_12(byte byte_0, byte byte_1, byte byte_2)
+	public static bool IsByteInRange(byte byte_0, byte byte_1, byte byte_2)
 	{
 		if (byte_0 >= byte_1 && byte_0 <= byte_2)
 		{
@@ -496,7 +496,7 @@ internal class Settings
 		return false;
 	}
 
-	public static bool smethod_13(int int_0, int int_1, int int_2)
+	public static bool IsIntInRange(int int_0, int int_1, int int_2)
 	{
 		if (int_0 >= int_1 && int_0 <= int_2)
 		{
@@ -505,32 +505,32 @@ internal class Settings
 		return false;
 	}
 
-	public static int smethod_14(byte byte_0, int int_0, int int_1)
+	public static int GetBits(byte byte_0, int int_0, int int_1)
 	{
 		int num = (int)Math.Pow(2.0, int_1) - 1;
 		return (byte_0 >> int_0) & num;
 	}
 
-	public static void smethod_15(ref byte byte_0, int int_0, int int_1)
+	public static void ClearBits(ref byte byte_0, int int_0, int int_1)
 	{
 		int num = (int)Math.Pow(2.0, int_1) - 1;
 		byte_0 &= (byte)(~(num << int_0));
 	}
 
-	public static void smethod_16(ref byte byte_0, int int_0, int int_1, int int_2)
+	public static void SetBits(ref byte byte_0, int int_0, int int_1, int int_2)
 	{
 		int num = (int)Math.Pow(2.0, int_1) - 1;
 		byte_0 &= (byte)(~(num << int_0));
 		byte_0 |= (byte)((int_2 & num) << int_0);
 	}
 
-	public static void smethod_17(ref ushort ushort_0, int int_0, int int_1)
+	public static void ClearBits16(ref ushort ushort_0, int int_0, int int_1)
 	{
 		int num = (int)Math.Pow(2.0, int_1) - 1;
 		ushort_0 &= (ushort)(~(num << int_0));
 	}
 
-	public static bool smethod_18(byte[] byte_0, byte[] byte_1, int int_0)
+	public static bool BytesEqual(byte[] byte_0, byte[] byte_1, int int_0)
 	{
 		if (byte_0.Length < int_0)
 		{
@@ -601,7 +601,7 @@ internal class Settings
 		return num;
 	}
 
-	public static int smethod_20(double double_0, double double_1)
+	public static int GetCommonBandIndex(double double_0, double double_1)
 	{
 		int num = 0;
 		int num2 = -1;
@@ -629,7 +629,7 @@ internal class Settings
 		return -1;
 	}
 
-	public static int smethod_21(uint uint_0, ref int int_0)
+	public static int GetValidBandIndex(uint uint_0, ref int int_0)
 	{
 		int num = 0;
 		int_0 = -1;
@@ -654,7 +654,7 @@ internal class Settings
 		return num;
 	}
 
-	public static int smethod_22(double double_0, double double_1)
+	public static int GetCommonValidBandIndex(double double_0, double double_1)
 	{
 		int num = 0;
 		int num2 = -1;
@@ -682,12 +682,12 @@ internal class Settings
 		return -1;
 	}
 
-	public static byte[] smethod_23(string string_0)
+	public static byte[] StringToGb2312Bytes(string string_0)
 	{
-		return smethod_24(string_0, "gb2312");
+		return StringToBytes(string_0, "gb2312");
 	}
 
-	public static byte[] smethod_24(string string_0, string string_1)
+	public static byte[] StringToBytes(string string_0, string string_1)
 	{
 		Encoding encoding = Encoding.GetEncoding(string_1);
 		if (encoding == null)
@@ -697,12 +697,12 @@ internal class Settings
 		return encoding.GetBytes(string_0);
 	}
 
-	public static string smethod_25(byte[] byte_0)
+	public static string Gb2312BytesToString(byte[] byte_0)
 	{
-		return smethod_26(byte_0, "gb2312");
+		return BytesToString(byte_0, "gb2312");
 	}
 
-	public static string smethod_26(byte[] byte_0, string string_0)
+	public static string BytesToString(byte[] byte_0, string string_0)
 	{
 		Encoding encoding = Encoding.GetEncoding(string_0);
 		if (encoding == null)
@@ -754,7 +754,7 @@ internal class Settings
 		}
 	}
 
-	public static void smethod_30(ref int int_0, int int_1, int int_2)
+	public static void RoundToNearestStep(ref int int_0, int int_1, int int_2)
 	{
 		int num = 1;
 		int num2 = 0;
@@ -788,7 +788,7 @@ internal class Settings
 		}
 	}
 
-	public static void smethod_31(ref int int_0)
+	public static void RoundUpToValidStep(ref int int_0)
 	{
 		int num = int_0 % 625;
 		if (num == 0)
@@ -811,7 +811,7 @@ internal class Settings
 		}
 	}
 
-	public static ushort smethod_32(ushort ushort_0)
+	public static ushort Bcd16ToDecimal(ushort ushort_0)
 	{
 		int num = 0;
 		int num2 = 0;
@@ -825,7 +825,7 @@ internal class Settings
 		return num3;
 	}
 
-	public static ushort smethod_33(ushort ushort_0)
+	public static ushort DecimalToBcd16(ushort ushort_0)
 	{
 		int num = 0;
 		int num2 = 0;
@@ -839,7 +839,7 @@ internal class Settings
 		return num3;
 	}
 
-	public static uint smethod_34(uint uint_0)
+	public static uint Bcd32ToDecimal(uint uint_0)
 	{
 		int num = 0;
 		uint num2 = 0u;
@@ -853,7 +853,7 @@ internal class Settings
 		return num3;
 	}
 
-	public static uint smethod_35(uint uint_0)
+	public static uint DecimalToBcd32(uint uint_0)
 	{
 		int num = 0;
 		uint num2 = 0u;
@@ -867,24 +867,24 @@ internal class Settings
 		return num3;
 	}
 
-	public static void smethod_36(CustomNumericUpDown class12_0, Class13 class13_0)
+	public static void ApplyNumericRange(CustomNumericUpDown class12_0, NumericRange class13_0)
 	{
-		if (class13_0.method_6() < 0m)
+		if (class13_0.GetScale() < 0m)
 		{
-			class12_0.Minimum = (decimal)class13_0.method_2() * class13_0.method_6();
-			class12_0.Maximum = (decimal)class13_0.method_0() * class13_0.method_6();
-			class12_0.Increment = Math.Abs((decimal)class13_0.method_4() * class13_0.method_6());
+			class12_0.Minimum = (decimal)class13_0.GetMax() * class13_0.GetScale();
+			class12_0.Maximum = (decimal)class13_0.GetMin() * class13_0.GetScale();
+			class12_0.Increment = Math.Abs((decimal)class13_0.GetIncrement() * class13_0.GetScale());
 		}
 		else
 		{
-			class12_0.Minimum = (decimal)class13_0.method_0() * class13_0.method_6();
-			class12_0.Maximum = (decimal)class13_0.method_2() * class13_0.method_6();
-			class12_0.Increment = (decimal)class13_0.method_4() * class13_0.method_6();
+			class12_0.Minimum = (decimal)class13_0.GetMin() * class13_0.GetScale();
+			class12_0.Maximum = (decimal)class13_0.GetMax() * class13_0.GetScale();
+			class12_0.Increment = (decimal)class13_0.GetIncrement() * class13_0.GetScale();
 		}
-		class12_0.method_0(class13_0.method_8());
+		class12_0.SetMaxTextLength(class13_0.GetMaxLength());
 	}
 
-	public static void smethod_37(ComboBox comboBox_0, string[] string_0)
+	public static void FillComboBox(ComboBox comboBox_0, string[] string_0)
 	{
 		int num = 0;
 		comboBox_0.Items.Clear();
@@ -894,7 +894,7 @@ internal class Settings
 		}
 	}
 
-	public static void smethod_38(ComboBox comboBox_0, string[] string_0, int int_0)
+	public static void FillComboBoxLimited(ComboBox comboBox_0, string[] string_0, int int_0)
 	{
 		int num = 0;
 		int num2 = Math.Min(string_0.Length, int_0);
@@ -905,26 +905,26 @@ internal class Settings
 		}
 	}
 
-	public static void smethod_39(CustomCombo class4_0, string[] string_0)
+	public static void FillCustomCombo(CustomCombo class4_0, string[] string_0)
 	{
 		int num = 0;
-		class4_0.method_0();
+		class4_0.ClearItems();
 		foreach (string string_1 in string_0)
 		{
-			class4_0.method_1(string_1, num++);
+			class4_0.AddItem(string_1, num++);
 		}
 	}
 
-	public static void smethod_40(CustomCombo class4_0, string[] string_0, int[] int_0)
+	public static void FillCustomComboWithIndices(CustomCombo class4_0, string[] string_0, int[] int_0)
 	{
-		class4_0.method_0();
+		class4_0.ClearItems();
 		foreach (int num in int_0)
 		{
-			class4_0.method_1(string_0[num], num);
+			class4_0.AddItem(string_0[num], num);
 		}
 	}
 
-	public static void smethod_41(ComboBox comboBox_0, int int_0, int int_1)
+	public static void FillComboBoxWithRange(ComboBox comboBox_0, int int_0, int int_1)
 	{
 		int num = 0;
 		comboBox_0.Items.Clear();
@@ -934,7 +934,7 @@ internal class Settings
 		}
 	}
 
-	public static void smethod_42(ComboBox comboBox_0, string string_0, int int_0, int int_1)
+	public static void FillComboBoxWithRangeAndFirstItem(ComboBox comboBox_0, string string_0, int int_0, int int_1)
 	{
 		int num = 0;
 		comboBox_0.Items.Clear();
@@ -945,7 +945,7 @@ internal class Settings
 		}
 	}
 
-	public static void smethod_43(ComboBox comboBox_0, int int_0, int int_1, int int_2, string string_0)
+	public static void FillComboBoxWithRangeReplacing(ComboBox comboBox_0, int int_0, int int_1, int int_2, string string_0)
 	{
 		int num = 0;
 		comboBox_0.Items.Clear();
@@ -962,68 +962,68 @@ internal class Settings
 		}
 	}
 
-	public static void smethod_44(CustomCombo class4_0, IData idata_0, string noneText = null)
+	public static void FillCustomComboFromData(CustomCombo class4_0, IData idata_0, string noneText = null)
 	{
 		int num = 0;
 		string text = "";
-		class4_0.method_0();
+		class4_0.ClearItems();
 		if (noneText == null)
 		{
-			class4_0.method_1(SZ_NONE, 0);
+			class4_0.AddItem(SZ_NONE, 0);
 		}
 		else
 		{
-			class4_0.method_1(noneText, 0);
+			class4_0.AddItem(noneText, 0);
 		}
 		for (num = 0; num < idata_0.Count; num++)
 		{
 			if (idata_0.DataIsValid(num))
 			{
 				text = idata_0.GetName(num);
-				class4_0.method_1(text, num + 1);
+				class4_0.AddItem(text, num + 1);
 			}
 		}
 	}
 
-	public static void smethod_45(CustomCombo class4_0, string[] string_0, IData idata_0)
+	public static void FillCustomComboWithPrefixAndData(CustomCombo class4_0, string[] string_0, IData idata_0)
 	{
 		int num = 0;
 		string text = "";
-		class4_0.method_0();
+		class4_0.ClearItems();
 		for (num = 0; num < string_0.Length; num++)
 		{
-			class4_0.method_1(string_0[num], num);
+			class4_0.AddItem(string_0[num], num);
 		}
 		for (num = 0; num < idata_0.Count; num++)
 		{
 			if (idata_0.DataIsValid(num))
 			{
 				text = $"{num + 1:d3}:{idata_0.GetName(num)}";
-				class4_0.method_1(text, num + string_0.Length);
+				class4_0.AddItem(text, num + string_0.Length);
 			}
 		}
 	}
 
-	public static void smethod_46(CustomCombo class4_0, string[] string_0, ListBox listBox_0)
+	public static void FillCustomComboFromListBox(CustomCombo class4_0, string[] string_0, ListBox listBox_0)
 	{
 		int num = 0;
 		string text = "";
-		class4_0.method_0();
+		class4_0.ClearItems();
 		for (num = 0; num < string_0.Length; num++)
 		{
-			class4_0.method_1(string_0[num], num);
+			class4_0.AddItem(string_0[num], num);
 		}
 		for (num = 0; num < listBox_0.Items.Count; num++)
 		{
 			text = listBox_0.Items[num].ToString();
 			if (listBox_0.Items[num] is SelectedItemUtils selectedItemUtils)
 			{
-				class4_0.method_1(text, selectedItemUtils.Value);
+				class4_0.AddItem(text, selectedItemUtils.Value);
 			}
 		}
 	}
 
-	public static int smethod_47(ListBox listBox_0, SelectedItemUtils class14_0)
+	public static int FindListBoxInsertIndex(ListBox listBox_0, SelectedItemUtils class14_0)
 	{
 		int num = 0;
 		num = 0;
@@ -1044,7 +1044,7 @@ internal class Settings
 		return num;
 	}
 
-	public static void smethod_48(TreeNode treeNode_0, int int_0)
+	public static void ExpandNodeToLevel(TreeNode treeNode_0, int int_0)
 	{
 		if (int_0 < treeNode_0.Level)
 		{
@@ -1053,19 +1053,19 @@ internal class Settings
 		treeNode_0.Expand();
 		foreach (TreeNode node in treeNode_0.Nodes)
 		{
-			smethod_48(node, int_0);
+			ExpandNodeToLevel(node, int_0);
 		}
 	}
 
-	public static void smethod_49(TreeView treeView_0, int int_0)
+	public static void ExpandTreeToLevel(TreeView treeView_0, int int_0)
 	{
 		foreach (TreeNode node in treeView_0.Nodes)
 		{
-			smethod_48(node, int_0);
+			ExpandNodeToLevel(node, int_0);
 		}
 	}
 
-	public static bool smethod_50(TreeNode treeNode_0, string string_0)
+	public static bool SiblingNameExists(TreeNode treeNode_0, string string_0)
 	{
 		if (string.IsNullOrEmpty(string_0))
 		{
@@ -1081,7 +1081,7 @@ internal class Settings
 		return false;
 	}
 
-	public static bool smethod_51(TreeNode treeNode_0, string string_0)
+	public static bool ChildNameExists(TreeNode treeNode_0, string string_0)
 	{
 		if (string.IsNullOrEmpty(string_0))
 		{
@@ -1097,7 +1097,7 @@ internal class Settings
 		return false;
 	}
 
-	public static void smethod_52(object sender, DataGridViewCellEventArgs e)
+	public static void DataGridView_CellEnterShowHelp(object sender, DataGridViewCellEventArgs e)
 	{
 		DataGridView dataGridView = sender as DataGridView;
 		string helpId = dataGridView.FindForm().Name + "_" + dataGridView.Columns[e.ColumnIndex].Name;
@@ -1107,7 +1107,7 @@ internal class Settings
 		}
 	}
 
-	public static void smethod_53(object sender, KeyPressEventArgs e)
+	public static void ValidateKeyPressAscii(object sender, KeyPressEventArgs e)
 	{
 		if ((e.KeyChar < '\0' || e.KeyChar > '\u007f') && e.KeyChar != '\b' && e.KeyChar != '.')
 		{
@@ -1116,11 +1116,11 @@ internal class Settings
 		}
 	}
 
-	public static void smethod_54(object sender, KeyPressEventArgs e)
+	public static void ValidateKeyPressNone(object sender, KeyPressEventArgs e)
 	{
 	}
 
-	public static void smethod_55(object sender, KeyPressEventArgs e)
+	public static void ValidateKeyPressDecimal(object sender, KeyPressEventArgs e)
 	{
 		if (!char.IsControl(e.KeyChar))
 		{
@@ -1133,7 +1133,7 @@ internal class Settings
 		}
 	}
 
-	public static bool smethod_56(string string_0)
+	public static bool IsAscii(string string_0)
 	{
 		char[] array = string_0.ToCharArray();
 		int num = 0;
@@ -1154,7 +1154,7 @@ internal class Settings
 		return false;
 	}
 
-	public static void smethod_57(object sender, KeyPressEventArgs e)
+	public static void ValidateKeyPressDtmf(object sender, KeyPressEventArgs e)
 	{
 		if ("0123456789ABCD*#\b".IndexOf(char.ToUpper(e.KeyChar)) < 0 && e.KeyChar != '\b' && e.KeyChar != '.')
 		{
@@ -1164,7 +1164,7 @@ internal class Settings
 		}
 	}
 
-	public static void smethod_58(object sender, KeyPressEventArgs e)
+	public static void ValidateKeyPressHex(object sender, KeyPressEventArgs e)
 	{
 		if ("0123456789ABCDEF".IndexOf(char.ToUpper(e.KeyChar)) < 0 && e.KeyChar != '\b' && e.KeyChar != '.')
 		{
@@ -1173,7 +1173,7 @@ internal class Settings
 		}
 	}
 
-	public static void smethod_59(Control.ControlCollection controlCollection_0)
+	public static void AttachHelpHandlers(Control.ControlCollection controlCollection_0)
 	{
 		foreach (Control item in controlCollection_0)
 		{
@@ -1181,21 +1181,21 @@ internal class Settings
 			{
 				if (item is DataGridView)
 				{
-					(item as DataGridView).CellEnter += smethod_52;
+					(item as DataGridView).CellEnter += DataGridView_CellEnterShowHelp;
 				}
 				else if (item.Controls.Count > 0)
 				{
-					smethod_59(item.Controls);
+					AttachHelpHandlers(item.Controls);
 				}
 			}
 			else
 			{
-				item.Enter += smethod_60;
+				item.Enter += Control_EnterShowHelp;
 			}
 		}
 	}
 
-	public static void smethod_60(object sender, EventArgs e)
+	public static void Control_EnterShowHelp(object sender, EventArgs e)
 	{
 		Control control = sender as Control;
 		string helpId = control.FindForm().Name + "_" + control.Name;
@@ -1229,7 +1229,7 @@ internal class Settings
 		return result;
 	}
 
-	public static void smethod_63(string string_0)
+	public static void SaveCodeplugBinary(string string_0)
 	{
 		FileStream fileStream = new FileStream(string_0, FileMode.Create);
 		BinaryFormatter binaryFormatter = new BinaryFormatter();
@@ -1251,7 +1251,7 @@ internal class Settings
 		fileStream.Close();
 	}
 
-	public static void smethod_64(string string_0)
+	public static void LoadCodeplugBinary(string string_0)
 	{
 		FileStream fileStream = new FileStream(string_0, FileMode.Open, FileAccess.Read, FileShare.Read);
 		BinaryFormatter binaryFormatter = new BinaryFormatter();
@@ -1273,18 +1273,18 @@ internal class Settings
 		fileStream.Close();
 	}
 
-	public static QkGVc1MQ9NxKRGCTdE cloneObject<QkGVc1MQ9NxKRGCTdE>(QkGVc1MQ9NxKRGCTdE CeqCQcoTiZ0ZwY0OmE)
+	public static T cloneObject<T>(T source)
 	{
 		BinaryFormatter binaryFormatter = new BinaryFormatter();
 		MemoryStream memoryStream = new MemoryStream();
-		binaryFormatter.Serialize(memoryStream, CeqCQcoTiZ0ZwY0OmE);
+		binaryFormatter.Serialize(memoryStream, source);
 		memoryStream.Seek(0L, SeekOrigin.Begin);
-		QkGVc1MQ9NxKRGCTdE result = (QkGVc1MQ9NxKRGCTdE)binaryFormatter.Deserialize(memoryStream);
+		T result = (T)binaryFormatter.Deserialize(memoryStream);
 		memoryStream.Close();
 		return result;
 	}
 
-	public static string smethod_66(string string_0)
+	public static string GetCommonText(string string_0)
 	{
 		if (dicCommon.ContainsKey(string_0))
 		{
@@ -1293,7 +1293,7 @@ internal class Settings
 		return "";
 	}
 
-	public static string smethod_67(string string_0)
+	public static string GetSettingsText(string string_0)
 	{
 		new Dictionary<string, string>();
 		string xpath = $"/Resource/Settings/Item[@Id='{string_0}']";
@@ -1324,7 +1324,7 @@ internal class Settings
 			{
 				dockContent.TabText = xmlNode.Attributes["Text"].Value;
 			}
-			setContolTextFromXmlData(form_0.smethod_12(), form_0.Name);
+			setContolTextFromXmlData(form_0.GetTranslatableControls(), form_0.Name);
 		}
 		catch (Exception ex)
 		{
@@ -1359,7 +1359,7 @@ internal class Settings
 		});
 	}
 
-	public static void UpdateContextMenuStripFromLanguageXmlData(List<ToolStripMenuItem> gku9yQXy4fa3WZdpnA, string string_0)
+	public static void UpdateContextMenuStripFromLanguageXmlData(List<ToolStripMenuItem> menuItems, string string_0)
 	{
 		Dictionary<string, string> dic = new Dictionary<string, string>();
 		string xpath = $"/Resource/{string_0}/ContextMenuStrip/MenuItem";
@@ -1369,7 +1369,7 @@ internal class Settings
 			string value2 = item.Attributes["Text"].Value;
 			dic.Add(value, value2);
 		}
-		gku9yQXy4fa3WZdpnA.ForEach(delegate(ToolStripMenuItem x)
+		menuItems.ForEach(delegate(ToolStripMenuItem x)
 		{
 			if (dic.ContainsKey(x.Name))
 			{
@@ -1379,7 +1379,7 @@ internal class Settings
 		});
 	}
 
-	public static void UpdateToolStripFromLanguageXmlData(List<ToolStripItem> LE9oY1wrram2m8Ao56, string string_0)
+	public static void UpdateToolStripFromLanguageXmlData(List<ToolStripItem> toolStripItems, string string_0)
 	{
 		Dictionary<string, string> dic = new Dictionary<string, string>();
 		string xpath = $"/Resource/{string_0}/Controls/Control/ToolStripItem";
@@ -1389,7 +1389,7 @@ internal class Settings
 			string value2 = item.Attributes["Text"].Value;
 			dic.Add(value, value2);
 		}
-		LE9oY1wrram2m8Ao56.ForEach(delegate(ToolStripItem x)
+		toolStripItems.ForEach(delegate(ToolStripItem x)
 		{
 			if (dic.ContainsKey(x.Name))
 			{
@@ -1424,37 +1424,37 @@ internal class Settings
 		}
 	}
 
-	public static void smethod_74(List<string[]> n2SR3VmEodXx385mq9, List<string> AMMonO7JcQ5lQDAuEr, string string_0)
+	public static void LoadSectionStringArrays(List<string[]> targets, List<string> ids, string string_0)
 	{
-		for (int i = 0; i < n2SR3VmEodXx385mq9.Count; i++)
+		for (int i = 0; i < targets.Count; i++)
 		{
-			string xpath = $"/Resource/{string_0}/Commons/Item[@Id='{AMMonO7JcQ5lQDAuEr[i]}']";
+			string xpath = $"/Resource/{string_0}/Commons/Item[@Id='{ids[i]}']";
 			XmlNode xmlNode = _languageXML.SelectSingleNode(xpath);
 			if (xmlNode != null)
 			{
 				string[] array = xmlNode.Attributes["Text"].Value.Split(',');
-				for (int j = 0; j < n2SR3VmEodXx385mq9[i].Length && j < array.Length; j++)
+				for (int j = 0; j < targets[i].Length && j < array.Length; j++)
 				{
-					n2SR3VmEodXx385mq9[i][j] = array[j];
+					targets[i][j] = array[j];
 				}
 			}
 		}
 	}
 
-	public static void smethod_75(List<string> mTBilSHhIiS5P1HoGl, List<string> QaKAVsVaOpyU5FW5pp)
+	public static void LoadCommonStringList(List<string> targets, List<string> ids)
 	{
-		for (int i = 0; i < mTBilSHhIiS5P1HoGl.Count; i++)
+		for (int i = 0; i < targets.Count; i++)
 		{
-			string xpath = $"/Resource/Commons/Item[@Id='{QaKAVsVaOpyU5FW5pp[i]}']";
+			string xpath = $"/Resource/Commons/Item[@Id='{ids[i]}']";
 			XmlNode xmlNode = _languageXML.SelectSingleNode(xpath);
 			if (xmlNode != null)
 			{
-				mTBilSHhIiS5P1HoGl[i] = xmlNode.Attributes["Text"].Value;
+				targets[i] = xmlNode.Attributes["Text"].Value;
 			}
 		}
 	}
 
-	public static void smethod_76(string string_0, ref string string_1)
+	public static void LoadCommonString(string string_0, ref string string_1)
 	{
 		string xpath = $"/Resource/Commons/Item[@Id='{string_0}' and @Text]";
 		XmlNode xmlNode = _languageXML.SelectSingleNode(xpath);
@@ -1464,7 +1464,7 @@ internal class Settings
 		}
 	}
 
-	public static void smethod_77(string string_0, ref string string_1, string string_2)
+	public static void LoadSectionString(string string_0, ref string string_1, string string_2)
 	{
 		string xpath = $"/Resource/{string_2}/Commons/Item[@Id='{string_0}' and @Text]";
 		XmlNode xmlNode = _languageXML.SelectSingleNode(xpath);
@@ -1474,7 +1474,7 @@ internal class Settings
 		}
 	}
 
-	public static void smethod_78(string string_0, string[] string_1, string string_2)
+	public static void LoadSectionStringArray(string string_0, string[] string_1, string string_2)
 	{
 		string xpath = $"/Resource/{string_2}/Commons/Item[@Id='{string_0}' and @Text]";
 		XmlNode xmlNode = _languageXML.SelectSingleNode(xpath);

@@ -23,11 +23,11 @@ namespace DMR
 			{
 				get
 				{
-					return Settings.smethod_25(name);
+					return Settings.Gb2312BytesToString(name);
 				}
 				set
 				{
-					byte[] array = Settings.smethod_23(value);
+					byte[] array = Settings.StringToGb2312Bytes(value);
 					name.Fill(byte.MaxValue);
 					Array.Copy(array, 0, name, 0, Math.Min(array.Length, name.Length));
 				}
@@ -258,7 +258,7 @@ namespace DMR
 		{
 			InitializeComponent();
 			base.Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
-			Scale(Settings.smethod_6());
+			Scale(Settings.GetFactor());
 		}
 
 		private void method_0()
@@ -268,7 +268,7 @@ namespace DMR
 
 		private void DtmfContactForm_Load(object sender, EventArgs e)
 		{
-			Settings.smethod_59(base.Controls);
+			Settings.AttachHelpHandlers(base.Controls);
 			Settings.UpdateComponentTextsFromLanguageXmlData(this);
 			method_0();
 			DispData();
@@ -330,8 +330,8 @@ namespace DMR
 				DataGridViewTextBoxEditingControl dataGridViewTextBoxEditingControl = (DataGridViewTextBoxEditingControl)e.Control;
 				if (dataGridView.CurrentCell.ColumnIndex == 1)
 				{
-					dataGridViewTextBoxEditingControl.KeyPress -= Settings.smethod_57;
-					dataGridViewTextBoxEditingControl.KeyPress += Settings.smethod_57;
+					dataGridViewTextBoxEditingControl.KeyPress -= Settings.ValidateKeyPressDtmf;
+					dataGridViewTextBoxEditingControl.KeyPress += Settings.ValidateKeyPressDtmf;
 					dataGridViewTextBoxEditingControl.CharacterCasing = CharacterCasing.Upper;
 					dataGridViewTextBoxEditingControl.MaxLength = 16;
 				}

@@ -324,13 +324,13 @@ namespace DMR
 			base.Load += ContactsForm_Load;
 			InitializeComponent();
 			base.Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
-			Scale(Settings.smethod_6());
+			Scale(Settings.GetFactor());
 		}
 
 		public static void RefreshCommonLang()
 		{
 			string name = typeof(ContactsForm).Name;
-			Settings.smethod_78("HeaderText", SZ_HEADER_TEXT, name);
+			Settings.LoadSectionStringArray("HeaderText", SZ_HEADER_TEXT, name);
 		}
 
 		private void ContactsForm_Load(object sender, EventArgs e)
@@ -515,11 +515,11 @@ namespace DMR
 				dataGridViewTextBoxColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
 				dgvContacts.Columns.Add(dataGridViewTextBoxColumn);
 			}
-			Settings.smethod_40(cmbAddType, ContactForm.SZ_CALL_TYPE, new int[2] { 0, 1 });
-			Settings.smethod_37(cmbType, ContactForm.SZ_CALL_TYPE);
-			Settings.smethod_37(cmbCallRxTone, ContactForm.SZ_CALL_RX_TONE);
-			Settings.smethod_43(cmbRingStyle, 0, 10, 0, Settings.SZ_NONE);
-			Settings.smethod_43(cmbRepeaterSlot, 0, 4, 0, Settings.SZ_NONE);
+			Settings.FillCustomComboWithIndices(cmbAddType, ContactForm.SZ_CALL_TYPE, new int[2] { 0, 1 });
+			Settings.FillComboBox(cmbType, ContactForm.SZ_CALL_TYPE);
+			Settings.FillComboBox(cmbCallRxTone, ContactForm.SZ_CALL_RX_TONE);
+			Settings.FillComboBoxWithRangeReplacing(cmbRingStyle, 0, 10, 0, Settings.SZ_NONE);
+			Settings.FillComboBoxWithRangeReplacing(cmbRepeaterSlot, 0, 4, 0, Settings.SZ_NONE);
 			txtName.MaxLength = 16;
 			txtCallId.MaxLength = 8;
 			dgvContacts.Columns[4].Visible = false;

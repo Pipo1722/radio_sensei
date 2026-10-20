@@ -81,7 +81,7 @@ namespace DMR
 			hidComm = new CodeplugComms();
 			InitializeComponent();
 			base.Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
-			Scale(Settings.smethod_6());
+			Scale(Settings.GetFactor());
 		}
 
 		private void CommPrgForm_Load(object sender, EventArgs e)

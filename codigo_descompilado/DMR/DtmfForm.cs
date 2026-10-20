@@ -805,12 +805,12 @@ namespace DMR
 				data.SelfId = sgtextBox_0.Text;
 				data.KillCode = txtKillCode.Text;
 				data.WakeCode = txtWakeCode.Text;
-				data.Delimiter = cmbDelimiter.method_3();
-				data.GroupCode = cmbGrpCallCode.method_3();
-				data.DecodeResp = cmbDecResp.method_3();
+				data.Delimiter = cmbDelimiter.GetSelectedValue();
+				data.GroupCode = cmbGrpCallCode.GetSelectedValue();
+				data.DecodeResp = cmbDecResp.GetSelectedValue();
 				data.AutoResetTimer = nudAutoResetTimer.Value;
-				data.KillWakeDec = cmbKillWakeDec.method_3();
-				data.KillType = cmbKillType.method_3();
+				data.KillWakeDec = cmbKillWakeDec.GetSelectedValue();
+				data.KillType = cmbKillType.GetSelectedValue();
 				data.PttidUpCode = txtUpCode.Text;
 				data.PttidDownCode = txtDownCode.Text;
 				data.RespHoldTime = nudRespHoldTime.Value;
@@ -835,12 +835,12 @@ namespace DMR
 				sgtextBox_0.Text = data.SelfId;
 				txtKillCode.Text = data.KillCode;
 				txtWakeCode.Text = data.WakeCode;
-				cmbDelimiter.method_2(data.Delimiter);
-				cmbGrpCallCode.method_2(data.GroupCode);
-				cmbDecResp.method_2(data.DecodeResp);
+				cmbDelimiter.SelectByValue(data.Delimiter);
+				cmbGrpCallCode.SelectByValue(data.GroupCode);
+				cmbDecResp.SelectByValue(data.DecodeResp);
 				nudAutoResetTimer.Value = data.AutoResetTimer;
-				cmbKillWakeDec.method_2(data.KillWakeDec);
-				cmbKillType.method_2(data.KillType);
+				cmbKillWakeDec.SelectByValue(data.KillWakeDec);
+				cmbKillType.SelectByValue(data.KillType);
 				txtUpCode.Text = data.PttidUpCode;
 				txtDownCode.Text = data.PttidDownCode;
 				nudRespHoldTime.Value = data.RespHoldTime;
@@ -889,7 +889,7 @@ namespace DMR
 		{
 			InitializeComponent();
 			base.Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
-			Scale(Settings.smethod_6());
+			Scale(Settings.GetFactor());
 		}
 
 		private void method_0()
@@ -905,58 +905,58 @@ namespace DMR
 			cmbDelimiter.Items.Clear();
 			foreach (int value in Enum.GetValues(typeof(DtmfDelimiter)))
 			{
-				cmbDelimiter.method_1("ABCD*#".Substring(num++, 1), value);
+				cmbDelimiter.AddItem("ABCD*#".Substring(num++, 1), value);
 			}
 			num = 0;
 			cmbGrpCallCode.Items.Clear();
 			foreach (int value2 in Enum.GetValues(typeof(DtmfGroupCode)))
 			{
-				cmbGrpCallCode.method_1(SZ_GROUP_CODE[num++], value2);
+				cmbGrpCallCode.AddItem(SZ_GROUP_CODE[num++], value2);
 			}
 			num = 0;
 			cmbDecResp.Items.Clear();
 			foreach (int value3 in Enum.GetValues(typeof(DtmfDecResp)))
 			{
-				cmbDecResp.method_1(SZ_DECODE_RESP[num++], value3);
+				cmbDecResp.AddItem(SZ_DECODE_RESP[num++], value3);
 			}
-			Settings.smethod_36(nudAutoResetTimer, new Class13(5, 60, 1, 1m, 2));
+			Settings.ApplyNumericRange(nudAutoResetTimer, new NumericRange(5, 60, 1, 1m, 2));
 			num = 0;
 			cmbKillWakeDec.Items.Clear();
 			foreach (int value4 in Enum.GetValues(typeof(DtmfKillWakeDec)))
 			{
-				cmbKillWakeDec.method_1(SZ_KILL_WAKE_DEC[num++], value4);
+				cmbKillWakeDec.AddItem(SZ_KILL_WAKE_DEC[num++], value4);
 			}
 			num = 0;
 			cmbKillType.Items.Clear();
 			foreach (int value5 in Enum.GetValues(typeof(DtmfKillType)))
 			{
-				cmbKillType.method_1(SZ_KILL_TYPE[num++], value5);
+				cmbKillType.AddItem(SZ_KILL_TYPE[num++], value5);
 			}
 			txtUpCode.MaxLength = 30;
 			txtUpCode.InputString = "0123456789ABCD*#\b";
 			txtDownCode.MaxLength = 30;
 			txtDownCode.InputString = "0123456789ABCD*#\b";
-			Settings.smethod_36(nudRespHoldTime, new Class13(5, 100, 1, 0.1m, 4));
-			Settings.smethod_36(nudDecTime, new Class13(5, 50, 1, 0.1m, 3));
-			Settings.smethod_36(nudFstDlyTime, new Class13(1, 10, 1, 100m, 4));
-			Settings.smethod_36(nudFstDur, new Class13(0, 10, 1, 100m, 4));
-			Settings.smethod_36(nudOtherDur, new Class13(0, 10, 1, 100m, 4));
-			Settings.smethod_36(nudTailDur, new Class13(0, 10, 1, 100m, 4));
-			Settings.smethod_36(nudRate, new Class13(1, 10, 1, 1m, 2));
+			Settings.ApplyNumericRange(nudRespHoldTime, new NumericRange(5, 100, 1, 0.1m, 4));
+			Settings.ApplyNumericRange(nudDecTime, new NumericRange(5, 50, 1, 0.1m, 3));
+			Settings.ApplyNumericRange(nudFstDlyTime, new NumericRange(1, 10, 1, 100m, 4));
+			Settings.ApplyNumericRange(nudFstDur, new NumericRange(0, 10, 1, 100m, 4));
+			Settings.ApplyNumericRange(nudOtherDur, new NumericRange(0, 10, 1, 100m, 4));
+			Settings.ApplyNumericRange(nudTailDur, new NumericRange(0, 10, 1, 100m, 4));
+			Settings.ApplyNumericRange(nudRate, new NumericRange(1, 10, 1, 1m, 2));
 		}
 
 		public static void RefreshCommonLang()
 		{
 			string name = typeof(DtmfForm).Name;
-			Settings.smethod_78("DecodeResp", SZ_DECODE_RESP, name);
-			Settings.smethod_78("GroupCode", SZ_GROUP_CODE, name);
-			Settings.smethod_78("KillType", SZ_KILL_TYPE, name);
-			Settings.smethod_78("KillWakeDec", SZ_KILL_WAKE_DEC, name);
+			Settings.LoadSectionStringArray("DecodeResp", SZ_DECODE_RESP, name);
+			Settings.LoadSectionStringArray("GroupCode", SZ_GROUP_CODE, name);
+			Settings.LoadSectionStringArray("KillType", SZ_KILL_TYPE, name);
+			Settings.LoadSectionStringArray("KillWakeDec", SZ_KILL_WAKE_DEC, name);
 		}
 
 		private void DtmfForm_Load(object sender, EventArgs e)
 		{
-			Settings.smethod_59(base.Controls);
+			Settings.AttachHelpHandlers(base.Controls);
 			Settings.UpdateComponentTextsFromLanguageXmlData(this);
 			DispData();
 		}

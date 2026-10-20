@@ -10,7 +10,7 @@ using UsbLibrary;
 
 internal class CodeplugComms
 {
-	public delegate void Delegate1(object sender, FirmwareUpdateProgressEventArgs e);
+	public delegate void FirmwareUpdateProgressHandler(object sender, FirmwareUpdateProgressEventArgs e);
 
 	public enum CommunicationType
 	{
@@ -64,7 +64,7 @@ internal class CodeplugComms
 
 	private Thread thread;
 
-	private Delegate1 OnFirmwareUpdateProgress;
+	private FirmwareUpdateProgressHandler OnFirmwareUpdateProgress;
 
 	private bool _CancelComm;
 
@@ -75,7 +75,7 @@ internal class CodeplugComms
 	public static CommunicationType CommunicationMode { get; set; }
 
 	[CompilerGenerated]
-	public bool method_0()
+	public bool GetCancelComm()
 	{
 		return _CancelComm;
 	}
@@ -425,7 +425,7 @@ internal class CodeplugComms
 				specifiedDevice.ReceiveData(array2);
 				byte[] array3 = new byte[8];
 				Buffer.BlockCopy(array2, 0, array3, 0, 8);
-				if (array3.smethod_4(Settings.CUR_MODEL))
+				if (array3.StartsWithBytes(Settings.CUR_MODEL))
 				{
 					specifiedDevice.SendData(CMD_ACK);
 					Array.Clear(array2, 0, array2.Length);
@@ -540,7 +540,7 @@ internal class CodeplugComms
 							num11 = list4[num];
 							for (num7 = num10; num7 < num11; num7 += num5)
 							{
-								if (!method_0())
+								if (!GetCancelComm())
 								{
 									if (num9 >> 16 != num7 >> 16)
 									{
@@ -667,7 +667,7 @@ internal class CodeplugComms
 								num7 = num10;
 								while (num7 < num11)
 								{
-									if (!method_0())
+									if (!GetCancelComm())
 									{
 										if (num9 >> 16 != num7 >> 16)
 										{
@@ -699,7 +699,7 @@ internal class CodeplugComms
 										specifiedDevice.SendData(array8, 0, 4);
 										if (specifiedDevice.ReceiveData(array2))
 										{
-											if (Settings.smethod_18(array8, array2, 4))
+											if (Settings.BytesEqual(array8, array2, 4))
 											{
 												Array.Copy(array2, 4, array, num7, num5);
 												if (OnFirmwareUpdateProgress != null)
@@ -756,7 +756,6 @@ internal class CodeplugComms
 					OnFirmwareUpdateProgress(this, new FirmwareUpdateProgressEventArgs(0f, Settings.SZ_MODEL_NOT_MATCH, Failed: true, Closed: true));
 				}
 				return;
-				continue;
 				end_IL_0092:
 				break;
 			}
@@ -835,7 +834,7 @@ internal class CodeplugComms
 				specifiedDevice.ReceiveData(array);
 				byte[] array4 = new byte[8];
 				Buffer.BlockCopy(array, 0, array4, 0, 8);
-				if (array4.smethod_4(Settings.CUR_MODEL))
+				if (array4.StartsWithBytes(Settings.CUR_MODEL))
 				{
 					specifiedDevice.SendData(CMD_ACK);
 					Array.Clear(array, 0, array.Length);
@@ -986,7 +985,7 @@ internal class CodeplugComms
 							num7 = num10;
 							while (num7 < num11)
 							{
-								if (!method_0())
+								if (!GetCancelComm())
 								{
 									if (num8 >> 16 != num7 >> 16)
 									{
@@ -1083,15 +1082,15 @@ internal class CodeplugComms
 	}
 
 	[MethodImpl(MethodImplOptions.Synchronized)]
-	public void SetProgressCallback(Delegate1 delegate1_0)
+	public void SetProgressCallback(FirmwareUpdateProgressHandler delegate1_0)
 	{
-		OnFirmwareUpdateProgress = (Delegate1)Delegate.Combine(OnFirmwareUpdateProgress, delegate1_0);
+		OnFirmwareUpdateProgress = (FirmwareUpdateProgressHandler)Delegate.Combine(OnFirmwareUpdateProgress, delegate1_0);
 	}
 
 	[MethodImpl(MethodImplOptions.Synchronized)]
-	public void method_10(Delegate1 delegate1_0)
+	public void RemoveProgressCallback(FirmwareUpdateProgressHandler delegate1_0)
 	{
-		OnFirmwareUpdateProgress = (Delegate1)Delegate.Remove(OnFirmwareUpdateProgress, delegate1_0);
+		OnFirmwareUpdateProgress = (FirmwareUpdateProgressHandler)Delegate.Remove(OnFirmwareUpdateProgress, delegate1_0);
 	}
 
 	public CodeplugComms()

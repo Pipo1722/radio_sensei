@@ -72,7 +72,7 @@ namespace DMR
 						if (!ContactForm.data.DataIsValid(num2))
 						{
 							contact[num] = 0;
-							Settings.smethod_17(ref index, num, 1);
+							Settings.ClearBits16(ref index, num, 1);
 						}
 					}
 				}
@@ -139,7 +139,7 @@ namespace DMR
 		{
 			InitializeComponent();
 			base.Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
-			Scale(Settings.smethod_6());
+			Scale(Settings.GetFactor());
 		}
 
 		private void method_0()
@@ -168,12 +168,12 @@ namespace DMR
 		public static void RefreshCommonLang()
 		{
 			string name = typeof(DigitalKeyContactForm).Name;
-			Settings.smethod_77("DigitKey", ref SZ_DIGIT_KEY_TEXT, name);
+			Settings.LoadSectionString("DigitKey", ref SZ_DIGIT_KEY_TEXT, name);
 		}
 
 		private void DigitalKeyContactForm_Load(object sender, EventArgs e)
 		{
-			Settings.smethod_59(base.Controls);
+			Settings.AttachHelpHandlers(base.Controls);
 			Settings.UpdateComponentTextsFromLanguageXmlData(this);
 			DispData();
 		}

@@ -13,7 +13,7 @@ namespace DMR
 
 		private int _cols = 1;
 
-		private IContainer components;
+		private IContainer components = null;
 
 		private GroupBox groupBox1;
 

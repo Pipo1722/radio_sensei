@@ -36,14 +36,14 @@ namespace DMR
 			data = new byte[40];
 			InitializeComponent();
 			base.Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
-			Scale(Settings.smethod_6());
+			Scale(Settings.GetFactor());
 		}
 
 		private void VoteScanForm_Load(object sender, EventArgs e)
 		{
 			try
 			{
-				Settings.smethod_59(base.Controls);
+				Settings.AttachHelpHandlers(base.Controls);
 				Settings.UpdateComponentTextsFromLanguageXmlData(this);
 				chkChMark.Checked = Convert.ToBoolean(data[37] & 0x10);
 				chkTalkback.Checked = Convert.ToBoolean(data[37] & 0x80);

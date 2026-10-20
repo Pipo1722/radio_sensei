@@ -1001,7 +1001,7 @@ namespace DMR
 			base.PerformLayout();
 		}
 
-		private IDockContent method_0(string string_0)
+		private IDockContent GetDockContentFromPersistString(string string_0)
 		{
 			if (string_0 == typeof(TreeForm).ToString())
 			{
@@ -1030,11 +1030,11 @@ namespace DMR
 			_TextBox.Visible = false;
 			_TextBox.LostFocus += _TextBox_LostFocus;
 			_TextBox.Validating += _TextBox_Validating;
-			_TextBox.KeyPress += Settings.smethod_57;
+			_TextBox.KeyPress += Settings.ValidateKeyPressDtmf;
 			base.Controls.Add(_TextBox);
-			m_deserializeDockContent = method_0;
+			m_deserializeDockContent = GetDockContentFromPersistString;
 			initialiseTree();
-			method_20(method_19());
+			PopulateTreeFromDataTable(BuildTreeDataTable());
 			frmHelp.VisibleChanged += FormPanel_VisibleChanged;
 			frmTree.VisibleChanged += FormPanel_VisibleChanged;
 		}
@@ -1106,14 +1106,14 @@ namespace DMR
 			}
 			using (Graphics graphics = CreateGraphics())
 			{
-				Settings.smethod_7(new SizeF(graphics.DpiX / 96f, graphics.DpiY / 96f));
+				Settings.SetFactor(new SizeF(graphics.DpiX / 96f, graphics.DpiY / 96f));
 			}
 			tsmiBasic.Visible = true;
-			Settings.smethod_9("TYT760");
-			Settings.smethod_5(Settings.UserMode.Expert);
+			Settings.SetCurUserPwd("TYT760");
+			Settings.SetUserMode(Settings.UserMode.Expert);
 			Settings.CUR_MODE = 2;
 			ChannelForm.CurCntCh = 1024;
-			method_15();
+			LoadHelpXml();
 			bool flag = false;
 			if (StartupArgs.Length != 0)
 			{
@@ -1271,7 +1271,7 @@ namespace DMR
 			}
 		}
 
-		private void method_1(Form form_0)
+		private void SaveFormData(Form form_0)
 		{
 			if (form_0 is IDisp disp)
 			{
@@ -1279,20 +1279,20 @@ namespace DMR
 			}
 		}
 
-		private void method_2()
+		private void SaveActiveFormData()
 		{
-			method_1(base.ActiveMdiChild);
+			SaveFormData(base.ActiveMdiChild);
 		}
 
-		private void method_3()
+		private void SaveAllFormsData()
 		{
-			method_2();
+			SaveActiveFormData();
 			Form[] mdiChildren = base.MdiChildren;
 			foreach (Form form in mdiChildren)
 			{
 				if (form != base.ActiveMdiChild)
 				{
-					method_1(form);
+					SaveFormData(form);
 				}
 			}
 		}
@@ -1306,7 +1306,7 @@ namespace DMR
 			}
 		}
 
-		private void method_5(Type type_0)
+		private void CloseFormsOfType(Type type_0)
 		{
 			Form[] mdiChildren = base.MdiChildren;
 			foreach (Form form in mdiChildren)
@@ -1318,7 +1318,7 @@ namespace DMR
 			}
 		}
 
-		private Form method_6(TreeNode treeNode_0)
+		private Form GetFormForTreeNode(TreeNode treeNode_0)
 		{
 			if (treeNode_0 == null)
 			{
@@ -1408,7 +1408,7 @@ namespace DMR
 			{
 				if (form.GetType() == type)
 				{
-					method_1(form);
+					SaveFormData(form);
 				}
 			}
 		}
@@ -1571,8 +1571,8 @@ namespace DMR
 		{
 			tvwMain.Nodes.Clear();
 			initialiseTree();
-			method_20(method_19());
-			lstFixedNode = tvwMain.smethod_5();
+			PopulateTreeFromDataTable(BuildTreeDataTable());
+			lstFixedNode = tvwMain.GetAllNodes();
 			lstFixedNode.ForEach(delegate(TreeNode treeNode_0)
 			{
 				if (dicTree.ContainsKey(treeNode_0.Name))
@@ -1588,7 +1588,7 @@ namespace DMR
 				}
 			});
 			InitDynamicNode();
-			Settings.smethod_49(tvwMain, 0);
+			Settings.ExpandTreeToLevel(tvwMain, 0);
 		}
 
 		public void InitRxGroupLists(TreeNode parentNode)
@@ -1636,7 +1636,7 @@ namespace DMR
 		public void InitDigitContacts(TreeNode parentNode)
 		{
 			int num = 0;
-			method_5(typeof(ContactForm));
+			CloseFormsOfType(typeof(ContactForm));
 			parentNode.Nodes.Clear();
 			for (num = 0; num < 1024; num++)
 			{
@@ -1663,7 +1663,7 @@ namespace DMR
 			int num = 0;
 			int num2 = 0;
 			int num3 = 0;
-			method_5(typeof(ChannelForm));
+			CloseFormsOfType(typeof(ChannelForm));
 			parentNode.Nodes.Clear();
 			for (num = 0; num < ChannelForm.CurCntCh; num++)
 			{
@@ -1747,7 +1747,7 @@ namespace DMR
 
 		public TreeNode GetTreeNodeByType(Type type)
 		{
-			return method_9(type, tvwMain.Nodes);
+			return FindTreeNodeByType(type, tvwMain.Nodes);
 		}
 
 		public TreeNode GetTreeNodeByType(Type type, int index)
@@ -1762,7 +1762,7 @@ namespace DMR
 			return null;
 		}
 
-		private TreeNode method_8(Type type_0, TreeNodeCollection treeNodeCollection_0)
+		private TreeNode FindTreeNodeBySubType(Type type_0, TreeNodeCollection treeNodeCollection_0)
 		{
 			foreach (TreeNode item in treeNodeCollection_0)
 			{
@@ -1770,7 +1770,7 @@ namespace DMR
 				{
 					return item;
 				}
-				TreeNode treeNode2 = method_8(type_0, item.Nodes);
+				TreeNode treeNode2 = FindTreeNodeBySubType(type_0, item.Nodes);
 				if (treeNode2 != null)
 				{
 					return treeNode2;
@@ -1779,7 +1779,7 @@ namespace DMR
 			return null;
 		}
 
-		private TreeNode method_9(Type type_0, TreeNodeCollection treeNodeCollection_0)
+		private TreeNode FindTreeNodeByType(Type type_0, TreeNodeCollection treeNodeCollection_0)
 		{
 			foreach (TreeNode item in treeNodeCollection_0)
 			{
@@ -1787,7 +1787,7 @@ namespace DMR
 				{
 					return item;
 				}
-				TreeNode treeNode2 = method_9(type_0, item.Nodes);
+				TreeNode treeNode2 = FindTreeNodeByType(type_0, item.Nodes);
 				if (treeNode2 != null)
 				{
 					return treeNode2;
@@ -1837,7 +1837,7 @@ namespace DMR
 				tvwMain.SelectedNode = e.Node;
 				if (e.Node.Tag is TreeNodeItem treeNodeItem && treeNodeItem.Cms != null)
 				{
-					method_2();
+					SaveActiveFormData();
 					treeNodeItem.Cms.Show(tvwMain, e.X, e.Y);
 				}
 			}
@@ -1904,7 +1904,7 @@ namespace DMR
 				{
 					return;
 				}
-				if (Settings.smethod_50(e.Node, e.Label))
+				if (Settings.SiblingNameExists(e.Node, e.Label))
 				{
 					MessageBox.Show("Name exists");
 					e.CancelEdit = true;
@@ -1916,7 +1916,7 @@ namespace DMR
 					RefreshRelatedForm(treeNodeItem.Type);
 					e.Node.Text = data.GetName(treeNodeItem.Index);
 					e.CancelEdit = true;
-					Form form = method_6(e.Node);
+					Form form = GetFormForTreeNode(e.Node);
 					if (form != null && form is IDisp disp && (int)form.Tag == treeNodeItem.Index)
 					{
 						disp.RefreshName();
@@ -1946,7 +1946,7 @@ namespace DMR
 			{
 				keys |= Keys.Control;
 			}
-			ToolStripMenuItem toolStripMenuItem = method_10(treeNodeItem.Cms.Items, keys);
+			ToolStripMenuItem toolStripMenuItem = FindMenuItemByShortcut(treeNodeItem.Cms.Items, keys);
 			if (toolStripMenuItem == null)
 			{
 				return;
@@ -1982,7 +1982,7 @@ namespace DMR
 			toolStripMenuItem.PerformClick();
 		}
 
-		private ToolStripMenuItem method_10(ToolStripItemCollection toolStripItemCollection_0, Keys keys_0)
+		private ToolStripMenuItem FindMenuItemByShortcut(ToolStripItemCollection toolStripItemCollection_0, Keys keys_0)
 		{
 			foreach (ToolStripItem item in toolStripItemCollection_0)
 			{
@@ -1992,7 +1992,7 @@ namespace DMR
 					{
 						return toolStripMenuItem;
 					}
-					ToolStripMenuItem toolStripMenuItem2 = method_10(toolStripMenuItem.DropDownItems, keys_0);
+					ToolStripMenuItem toolStripMenuItem2 = FindMenuItemByShortcut(toolStripMenuItem.DropDownItems, keys_0);
 					if (toolStripMenuItem2 != null)
 					{
 						return toolStripMenuItem2;
@@ -2108,7 +2108,7 @@ namespace DMR
 				{
 					selectedNode.Expand();
 				}
-				Form form = method_6(selectedNode.Nodes[0]);
+				Form form = GetFormForTreeNode(selectedNode.Nodes[0]);
 				if (form != null && form is IDisp disp)
 				{
 					disp.Node = selectedNode.Nodes[0];
@@ -2171,7 +2171,7 @@ namespace DMR
 
 		private void tsmiRename_Click(object sender, EventArgs e)
 		{
-			method_2();
+			SaveActiveFormData();
 			tvwMain.LabelEdit = true;
 			tvwMain.SelectedNode.BeginEdit();
 		}
@@ -2187,12 +2187,12 @@ namespace DMR
 			}
 			treeNode = selectedNode.Parent;
 			treeNodeItem = selectedNode.Tag as TreeNodeItem;
-			method_2();
+			SaveActiveFormData();
 			if (treeNodeItem == null || treeNode.Nodes.Count <= 0 || treeNodeItem.Cms != cmsSub)
 			{
 				return;
 			}
-			Form form = method_6(selectedNode);
+			Form form = GetFormForTreeNode(selectedNode);
 			if (form != null && form is IDisp disp && selectedNode == disp.Node)
 			{
 				if (selectedNode.NextNode != null)
@@ -2254,7 +2254,6 @@ namespace DMR
 		private void tsmiPaste_Click(object sender, EventArgs e)
 		{
 			TreeNode selectedNode = tvwMain.SelectedNode;
-			TreeNodeItem treeNodeItem = null;
 			if (selectedNode == null)
 			{
 				return;
@@ -2272,7 +2271,7 @@ namespace DMR
 					disp.SaveData();
 				}
 				treeNodeItem2.Paste(CopyItem);
-				Form form = method_6(selectedNode);
+				Form form = GetFormForTreeNode(selectedNode);
 				if (form != null && form is IDisp disp2 && disp2.Node == selectedNode)
 				{
 					disp2.DispData();
@@ -2577,7 +2576,7 @@ namespace DMR
 					sfdMain.InitialDirectory = Path.GetDirectoryName(CurFileName);
 					sfdMain.FileName = Path.GetFileNameWithoutExtension(CurFileName) + ".g77";
 				}
-				method_3();
+				SaveAllFormsData();
 				if (sfdMain.ShowDialog() == DialogResult.OK && !string.IsNullOrEmpty(sfdMain.FileName))
 				{
 					byte[] array = DataToByte();
@@ -2687,7 +2686,7 @@ namespace DMR
 
 		private void tsmiDeviceInfo_Click(object sender, EventArgs e)
 		{
-			TreeNode treeNode = method_9(typeof(DeviceInfoForm), tvwMain.Nodes);
+			TreeNode treeNode = FindTreeNodeByType(typeof(DeviceInfoForm), tvwMain.Nodes);
 			if (treeNode != null)
 			{
 				treeviewDoubleClickHandler(treeNode, bool_0: true);
@@ -2696,7 +2695,7 @@ namespace DMR
 
 		private void tsmiGerneralSet_Click(object sender, EventArgs e)
 		{
-			TreeNode treeNode = method_9(typeof(GeneralSetForm), tvwMain.Nodes);
+			TreeNode treeNode = FindTreeNodeByType(typeof(GeneralSetForm), tvwMain.Nodes);
 			if (treeNode != null)
 			{
 				treeviewDoubleClickHandler(treeNode, bool_0: true);
@@ -2705,7 +2704,7 @@ namespace DMR
 
 		private void tsmiButton_Click(object sender, EventArgs e)
 		{
-			TreeNode treeNode = method_9(typeof(ButtonForm), tvwMain.Nodes);
+			TreeNode treeNode = FindTreeNodeByType(typeof(ButtonForm), tvwMain.Nodes);
 			if (treeNode != null)
 			{
 				treeviewDoubleClickHandler(treeNode, bool_0: true);
@@ -2714,7 +2713,7 @@ namespace DMR
 
 		private void tsmiMenu_Click(object sender, EventArgs e)
 		{
-			TreeNode treeNode = method_9(typeof(MenuForm), tvwMain.Nodes);
+			TreeNode treeNode = FindTreeNodeByType(typeof(MenuForm), tvwMain.Nodes);
 			if (treeNode != null)
 			{
 				treeviewDoubleClickHandler(treeNode, bool_0: true);
@@ -2723,7 +2722,7 @@ namespace DMR
 
 		private void tsmiBootItem_Click(object sender, EventArgs e)
 		{
-			TreeNode treeNode = method_9(typeof(BootItemForm), tvwMain.Nodes);
+			TreeNode treeNode = FindTreeNodeByType(typeof(BootItemForm), tvwMain.Nodes);
 			if (treeNode != null)
 			{
 				treeviewDoubleClickHandler(treeNode, bool_0: true);
@@ -2732,7 +2731,7 @@ namespace DMR
 
 		private void tsmiNumKeyContact_Click(object sender, EventArgs e)
 		{
-			TreeNode treeNode = method_9(typeof(DigitalKeyContactForm), tvwMain.Nodes);
+			TreeNode treeNode = FindTreeNodeByType(typeof(DigitalKeyContactForm), tvwMain.Nodes);
 			if (treeNode != null)
 			{
 				treeviewDoubleClickHandler(treeNode, bool_0: true);
@@ -2741,7 +2740,7 @@ namespace DMR
 
 		private void tsmiTextMsg_Click(object sender, EventArgs e)
 		{
-			TreeNode treeNode = method_9(typeof(TextMsgForm), tvwMain.Nodes);
+			TreeNode treeNode = FindTreeNodeByType(typeof(TextMsgForm), tvwMain.Nodes);
 			if (treeNode != null)
 			{
 				treeviewDoubleClickHandler(treeNode, bool_0: false);
@@ -2750,7 +2749,7 @@ namespace DMR
 
 		private void tsmiEncrypt_Click(object sender, EventArgs e)
 		{
-			TreeNode treeNode = method_9(typeof(EncryptForm), tvwMain.Nodes);
+			TreeNode treeNode = FindTreeNodeByType(typeof(EncryptForm), tvwMain.Nodes);
 			if (treeNode != null)
 			{
 				treeviewDoubleClickHandler(treeNode, bool_0: false);
@@ -2759,7 +2758,7 @@ namespace DMR
 
 		private void tsmiSignalingSystem_Click(object sender, EventArgs e)
 		{
-			TreeNode treeNode = method_9(typeof(SignalingBasicForm), tvwMain.Nodes);
+			TreeNode treeNode = FindTreeNodeByType(typeof(SignalingBasicForm), tvwMain.Nodes);
 			if (treeNode != null)
 			{
 				treeviewDoubleClickHandler(treeNode, bool_0: false);
@@ -2768,7 +2767,7 @@ namespace DMR
 
 		private void tsmiDtmf_Click(object sender, EventArgs e)
 		{
-			TreeNode treeNode = method_9(typeof(DtmfForm), tvwMain.Nodes);
+			TreeNode treeNode = FindTreeNodeByType(typeof(DtmfForm), tvwMain.Nodes);
 			if (treeNode != null)
 			{
 				treeviewDoubleClickHandler(treeNode, bool_0: false);
@@ -2777,7 +2776,7 @@ namespace DMR
 
 		private void tsmiEmgSystem_Click(object sender, EventArgs e)
 		{
-			TreeNode treeNode = method_9(typeof(APRSForm), tvwMain.Nodes);
+			TreeNode treeNode = FindTreeNodeByType(typeof(APRSForm), tvwMain.Nodes);
 			if (treeNode != null)
 			{
 				treeviewDoubleClickHandler(treeNode, bool_0: false);
@@ -2786,7 +2785,7 @@ namespace DMR
 
 		private void tsmiAPRS_Configs_Click(object sender, EventArgs e)
 		{
-			TreeNode treeNode = method_9(typeof(APRSConfigsForm), tvwMain.Nodes);
+			TreeNode treeNode = FindTreeNodeByType(typeof(APRSConfigsForm), tvwMain.Nodes);
 			if (treeNode != null)
 			{
 				treeviewDoubleClickHandler(treeNode, bool_0: true);
@@ -2795,16 +2794,16 @@ namespace DMR
 
 		private void tsmiDtmfContact_Click(object sender, EventArgs e)
 		{
-			TreeNode treeNode = method_9(typeof(DtmfContactForm), tvwMain.Nodes);
+			TreeNode treeNode = FindTreeNodeByType(typeof(DtmfContactForm), tvwMain.Nodes);
 			if (treeNode != null)
 			{
 				treeviewDoubleClickHandler(treeNode, bool_0: false);
 			}
 		}
 
-		private void method_12(object sender, EventArgs e)
+		private void OpenContactsForm(object sender, EventArgs e)
 		{
-			TreeNode treeNode = method_9(typeof(ContactsForm), tvwMain.Nodes);
+			TreeNode treeNode = FindTreeNodeByType(typeof(ContactsForm), tvwMain.Nodes);
 			if (treeNode != null)
 			{
 				treeviewDoubleClickHandler(treeNode, bool_0: true);
@@ -2813,7 +2812,7 @@ namespace DMR
 
 		private void tsmiDmrContacts_Click(object sender, EventArgs e)
 		{
-			TreeNode treeNode = method_9(typeof(ContactsForm), tvwMain.Nodes);
+			TreeNode treeNode = FindTreeNodeByType(typeof(ContactsForm), tvwMain.Nodes);
 			if (treeNode != null)
 			{
 				treeviewDoubleClickHandler(treeNode, bool_0: true);
@@ -2822,7 +2821,7 @@ namespace DMR
 
 		private void tsmiGrpRxList_Click(object sender, EventArgs e)
 		{
-			TreeNode treeNode = method_9(typeof(RxGroupListForm), tvwMain.Nodes);
+			TreeNode treeNode = FindTreeNodeByType(typeof(RxGroupListForm), tvwMain.Nodes);
 			if (treeNode != null)
 			{
 				treeviewDoubleClickHandler(treeNode, bool_0: true);
@@ -2831,7 +2830,7 @@ namespace DMR
 
 		private void tsmiZoneBasic_Click(object sender, EventArgs e)
 		{
-			TreeNode treeNode = method_9(typeof(ZoneBasicForm), tvwMain.Nodes);
+			TreeNode treeNode = FindTreeNodeByType(typeof(ZoneBasicForm), tvwMain.Nodes);
 			if (treeNode != null)
 			{
 				treeviewDoubleClickHandler(treeNode, bool_0: true);
@@ -2840,7 +2839,7 @@ namespace DMR
 
 		private void tsmiZoneList_Click(object sender, EventArgs e)
 		{
-			TreeNode treeNode = method_9(typeof(ZoneForm), tvwMain.Nodes);
+			TreeNode treeNode = FindTreeNodeByType(typeof(ZoneForm), tvwMain.Nodes);
 			if (treeNode != null)
 			{
 				treeviewDoubleClickHandler(treeNode, bool_0: true);
@@ -2849,7 +2848,7 @@ namespace DMR
 
 		private void tsmiChannels_Click(object sender, EventArgs e)
 		{
-			TreeNode treeNode = method_9(typeof(ChannelsForm), tvwMain.Nodes);
+			TreeNode treeNode = FindTreeNodeByType(typeof(ChannelsForm), tvwMain.Nodes);
 			if (treeNode != null)
 			{
 				treeviewDoubleClickHandler(treeNode, bool_0: true);
@@ -2858,7 +2857,7 @@ namespace DMR
 
 		private void tsmiScanBasic_Click(object sender, EventArgs e)
 		{
-			TreeNode treeNode = method_9(typeof(ScanBasicForm), tvwMain.Nodes);
+			TreeNode treeNode = FindTreeNodeByType(typeof(ScanBasicForm), tvwMain.Nodes);
 			if (treeNode != null)
 			{
 				treeviewDoubleClickHandler(treeNode, bool_0: true);
@@ -2867,7 +2866,7 @@ namespace DMR
 
 		private void tsmiScanList_Click(object sender, EventArgs e)
 		{
-			TreeNode treeNode = method_9(typeof(NormalScanForm), tvwMain.Nodes);
+			TreeNode treeNode = FindTreeNodeByType(typeof(NormalScanForm), tvwMain.Nodes);
 			if (treeNode != null)
 			{
 				treeviewDoubleClickHandler(treeNode, bool_0: true);
@@ -2915,7 +2914,7 @@ namespace DMR
 			closeAllForms();
 			DownloadContactsForm downloadContactsForm = new DownloadContactsForm();
 			downloadContactsForm.mainForm = this;
-			TreeNode treeNode = method_9(typeof(ContactsForm), tvwMain.Nodes);
+			TreeNode treeNode = FindTreeNodeByType(typeof(ContactsForm), tvwMain.Nodes);
 			downloadContactsForm.treeNode = treeNode;
 			try
 			{
@@ -3119,7 +3118,7 @@ namespace DMR
 			}
 		}
 
-		private void method_13()
+		private void RefreshAllFormsLanguage()
 		{
 			ButtonForm.RefreshCommonLang();
 			BootItemForm.RefreshCommonLang();
@@ -3136,7 +3135,7 @@ namespace DMR
 			MenuForm.RefreshCommonLang();
 			NormalScanForm.RefreshCommonLang();
 			VfoForm.RefreshCommonLang();
-			Settings.smethod_10();
+			Settings.LoadCommonStrings();
 		}
 
 		private void languageChangeHandler(object sender, EventArgs e)
@@ -3155,17 +3154,17 @@ namespace DMR
 			{
 				Settings.SetHelpFilename(Path.GetDirectoryName(helpFilename) + Path.DirectorySeparatorChar + "English.chm");
 			}
-			Settings.smethod_76("Read", ref Settings.SZ_READ);
+			Settings.LoadCommonString("Read", ref Settings.SZ_READ);
 			Settings.UpdateComponentTextsFromLanguageXmlData(this);
 			Settings.UpdateComponentTextsFromLanguageXmlData(frmHelp);
 			Settings.UpdateComponentTextsFromLanguageXmlData(frmTree);
-			Settings.UpdateContextMenuStripFromLanguageXmlData(cmsGroup.smethod_9(), base.Name);
-			Settings.UpdateContextMenuStripFromLanguageXmlData(cmsGroupContact.smethod_9(), base.Name);
-			Settings.UpdateContextMenuStripFromLanguageXmlData(cmsTree.smethod_9(), base.Name);
-			Settings.UpdateContextMenuStripFromLanguageXmlData(cmsSub.smethod_9(), base.Name);
+			Settings.UpdateContextMenuStripFromLanguageXmlData(cmsGroup.GetAllContextMenuItems(), base.Name);
+			Settings.UpdateContextMenuStripFromLanguageXmlData(cmsGroupContact.GetAllContextMenuItems(), base.Name);
+			Settings.UpdateContextMenuStripFromLanguageXmlData(cmsTree.GetAllContextMenuItems(), base.Name);
+			Settings.UpdateContextMenuStripFromLanguageXmlData(cmsSub.GetAllContextMenuItems(), base.Name);
 			Settings.ReadCommonsTextIntoDictionary(Settings.dicCommon);
-			method_13();
-			Settings.smethod_75(new List<string> { Settings.SZ_READ }, new List<string> { "Read" });
+			RefreshAllFormsLanguage();
+			Settings.LoadCommonStringList(new List<string> { Settings.SZ_READ }, new List<string> { "Read" });
 			dicTree.Clear();
 			string xpath = "/Resource/MainForm/TreeView/TreeNode";
 			foreach (XmlNode item in Settings.languageXML.SelectNodes(xpath))
@@ -3188,7 +3187,7 @@ namespace DMR
 					}
 				}
 			});
-			List<ToolStripMenuItem> list = mnsMain.smethod_7();
+			List<ToolStripMenuItem> list = mnsMain.GetAllMenuItems();
 			Dictionary<string, string> dicMenuItem = new Dictionary<string, string>();
 			xpath = "/Resource/MainForm/MenuStrip/MenuItem";
 			foreach (XmlNode item2 in Settings.languageXML.SelectNodes(xpath))
@@ -3204,7 +3203,7 @@ namespace DMR
 					x.Text = dicMenuItem[x.Name];
 				}
 			});
-			List<ToolStripItem> list2 = tsrMain.smethod_10();
+			List<ToolStripItem> list2 = tsrMain.GetAllToolStripItems();
 			Dictionary<string, string> dicToolItem = new Dictionary<string, string>();
 			xpath = "/Resource/MainForm/ToolStrip/ToolItem";
 			foreach (XmlNode item3 in Settings.languageXML.SelectNodes(xpath))
@@ -3514,7 +3513,7 @@ namespace DMR
 			}
 		}
 
-		private void method_15()
+		private void LoadHelpXml()
 		{
 			dicHelp.Clear();
 			XmlDocument xmlDocument = new XmlDocument();
@@ -3531,7 +3530,7 @@ namespace DMR
 			xmlDocument.Clone();
 		}
 
-		private void method_16()
+		private void ExportHelpXml()
 		{
 			XmlTextWriter xmlTextWriter = new XmlTextWriter(Application.StartupPath + "/help.xml", Encoding.UTF8);
 			xmlTextWriter.Formatting = Formatting.Indented;
@@ -3540,7 +3539,7 @@ namespace DMR
 			Form[] mdiChildren = base.MdiChildren;
 			foreach (Form form in mdiChildren)
 			{
-				method_17(form.Controls, xmlTextWriter);
+				ExportHelpXmlForControls(form.Controls, xmlTextWriter);
 			}
 			xmlTextWriter.WriteEndElement();
 			xmlTextWriter.WriteEndDocument();
@@ -3548,7 +3547,7 @@ namespace DMR
 			xmlTextWriter.Close();
 		}
 
-		private void method_17(Control.ControlCollection controlCollection_0, XmlTextWriter xmlTextWriter_0)
+		private void ExportHelpXmlForControls(Control.ControlCollection controlCollection_0, XmlTextWriter xmlTextWriter_0)
 		{
 			foreach (Control item in controlCollection_0)
 			{
@@ -3565,7 +3564,7 @@ namespace DMR
 				}
 				if (item.Controls.Count > 0)
 				{
-					method_17(item.Controls, xmlTextWriter_0);
+					ExportHelpXmlForControls(item.Controls, xmlTextWriter_0);
 				}
 			}
 		}
@@ -3679,7 +3678,7 @@ namespace DMR
 			}
 		}
 
-		private DataTable method_19()
+		private DataTable BuildTreeDataTable()
 		{
 			DataTable dataTable = new DataTable();
 			dataTable.Columns.Add("Id");
@@ -3709,7 +3708,7 @@ namespace DMR
 			return dataTable;
 		}
 
-		private void method_20(DataTable dataTable_0)
+		private void PopulateTreeFromDataTable(DataTable dataTable_0)
 		{
 			DataRow[] array = (from dataRow_0 in dataTable_0.Select("ParentId='-1'")
 				orderby dataRow_0[0]
@@ -3717,11 +3716,11 @@ namespace DMR
 			if (array != null && array.Length != 0)
 			{
 				TreeNode treeNode_ = AddTreeViewNode(tvwMain.Nodes, array[0]["Name"].ToString(), lstTreeNodeItem[dataTable_0.Rows.IndexOf(array[0])]);
-				method_21(array[0], treeNode_, dataTable_0);
+				AddTreeChildNodes(array[0], treeNode_, dataTable_0);
 			}
 		}
 
-		private void method_21(DataRow dataRow_0, TreeNode treeNode_0, DataTable dataTable_0)
+		private void AddTreeChildNodes(DataRow dataRow_0, TreeNode treeNode_0, DataTable dataTable_0)
 		{
 			if (dataRow_0 == null || treeNode_0 == null)
 			{
@@ -3739,7 +3738,7 @@ namespace DMR
 					{
 						int index = dataTable_0.Rows.IndexOf(dataRow);
 						TreeNode treeNode_1 = AddTreeViewNode(treeNode_0.Nodes, dataRow["Name"].ToString(), lstTreeNodeItem[index]);
-						method_21(dataRow, treeNode_1, dataTable_0);
+						AddTreeChildNodes(dataRow, treeNode_1, dataTable_0);
 					}
 				}
 			}
@@ -3751,30 +3750,30 @@ namespace DMR
 
 		public void InitDynamicNode()
 		{
-			TreeNode parentNode = method_8(typeof(APRSForm), tvwMain.Nodes);
+			TreeNode parentNode = FindTreeNodeBySubType(typeof(APRSForm), tvwMain.Nodes);
 			InitAPRSConfigurations(parentNode);
-			parentNode = method_9(typeof(ContactsForm), tvwMain.Nodes);
+			parentNode = FindTreeNodeByType(typeof(ContactsForm), tvwMain.Nodes);
 			InitDigitContacts(parentNode);
-			parentNode = method_8(typeof(RxGroupListForm), tvwMain.Nodes);
+			parentNode = FindTreeNodeBySubType(typeof(RxGroupListForm), tvwMain.Nodes);
 			InitRxGroupLists(parentNode);
-			parentNode = method_9(typeof(ZoneBasicForm), tvwMain.Nodes);
+			parentNode = FindTreeNodeByType(typeof(ZoneBasicForm), tvwMain.Nodes);
 			InitZones(parentNode);
-			parentNode = method_9(typeof(ChannelsForm), tvwMain.Nodes);
+			parentNode = FindTreeNodeByType(typeof(ChannelsForm), tvwMain.Nodes);
 			InitChannels(parentNode);
-			parentNode = method_9(typeof(ScanBasicForm), tvwMain.Nodes);
+			parentNode = FindTreeNodeByType(typeof(ScanBasicForm), tvwMain.Nodes);
 		}
 
 		public void InitChannelsImportNodes()
 		{
-			TreeNode parentNode = method_9(typeof(ContactsForm), tvwMain.Nodes);
+			TreeNode parentNode = FindTreeNodeByType(typeof(ContactsForm), tvwMain.Nodes);
 			InitDigitContacts(parentNode);
-			parentNode = method_8(typeof(RxGroupListForm), tvwMain.Nodes);
+			parentNode = FindTreeNodeBySubType(typeof(RxGroupListForm), tvwMain.Nodes);
 			InitRxGroupLists(parentNode);
-			parentNode = method_9(typeof(ChannelsForm), tvwMain.Nodes);
+			parentNode = FindTreeNodeByType(typeof(ChannelsForm), tvwMain.Nodes);
 			InitChannels(parentNode);
-			parentNode = method_9(typeof(ScanBasicForm), tvwMain.Nodes);
+			parentNode = FindTreeNodeByType(typeof(ScanBasicForm), tvwMain.Nodes);
 			InitScans(parentNode);
-			parentNode = method_9(typeof(ZoneBasicForm), tvwMain.Nodes);
+			parentNode = FindTreeNodeByType(typeof(ZoneBasicForm), tvwMain.Nodes);
 			InitZones(parentNode);
 		}
 
@@ -3821,7 +3820,7 @@ namespace DMR
 			});
 		}
 
-		private void method_22()
+		private void ExportLanguageXmlTemplate()
 		{
 			XmlTextWriter xmlTextWriter = new XmlTextWriter(Application.StartupPath + "/test.xml", Encoding.UTF8);
 			xmlTextWriter.Formatting = Formatting.Indented;
@@ -3831,19 +3830,19 @@ namespace DMR
 			foreach (Form form in mdiChildren)
 			{
 				xmlTextWriter.WriteStartElement(form.Name);
-				WriteControlXml(form.smethod_12(), xmlTextWriter);
+				WriteControlXml(form.GetTranslatableControls(), xmlTextWriter);
 				xmlTextWriter.WriteEndElement();
 			}
 			foreach (Form openForm in Application.OpenForms)
 			{
 				xmlTextWriter.WriteStartElement(openForm.Name);
-				WriteControlXml(openForm.smethod_12(), xmlTextWriter);
+				WriteControlXml(openForm.GetTranslatableControls(), xmlTextWriter);
 				xmlTextWriter.WriteEndElement();
 			}
-			WriteMenuXml(cmsGroup.smethod_9(), xmlTextWriter);
-			WriteMenuXml(cmsSub.smethod_9(), xmlTextWriter);
-			WriteMenuXml(cmsTree.smethod_9(), xmlTextWriter);
-			WriteMenuXml(cmsGroupContact.smethod_9(), xmlTextWriter);
+			WriteMenuXml(cmsGroup.GetAllContextMenuItems(), xmlTextWriter);
+			WriteMenuXml(cmsSub.GetAllContextMenuItems(), xmlTextWriter);
+			WriteMenuXml(cmsTree.GetAllContextMenuItems(), xmlTextWriter);
+			WriteMenuXml(cmsGroupContact.GetAllContextMenuItems(), xmlTextWriter);
 			xmlTextWriter.WriteEndElement();
 			xmlTextWriter.WriteEndDocument();
 			xmlTextWriter.Flush();
@@ -3878,7 +3877,7 @@ namespace DMR
 				{
 					xml.WriteAttributeString("Text", lstControl.Text);
 					ToolStrip toolStrip_ = lstControl as ToolStrip;
-					WriteToolStripXml(toolStrip_.smethod_10(), xml);
+					WriteToolStripXml(toolStrip_.GetAllToolStripItems(), xml);
 				}
 				else
 				{
@@ -3890,7 +3889,7 @@ namespace DMR
 		}
 
 		[CompilerGenerated]
-		private static void smethod_0(TreeNode treeNode_0)
+		private static void UpdateTreeNodeText(TreeNode treeNode_0)
 		{
 			if (dicTree.ContainsKey(treeNode_0.Name))
 			{
@@ -3906,7 +3905,7 @@ namespace DMR
 		}
 
 		[CompilerGenerated]
-		private static bool smethod_1(byte byte_0)
+		private static bool IsErasedByte(byte byte_0)
 		{
 			return byte_0 == byte.MaxValue;
 		}

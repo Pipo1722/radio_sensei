@@ -6,7 +6,7 @@ namespace DMR
 {
 	public class CalibrationNUDLabelControl : UserControl
 	{
-		private IContainer components;
+		private IContainer components = null;
 
 		private Label label1;
 

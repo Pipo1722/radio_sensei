@@ -22,7 +22,8 @@ namespace DMR
 
 		private static string tempFile = "";
 
-		private WebClientAsync wc;
+		// Never assigned: only used by downloadStringCompletedCallback, which is not wired to any event.
+		private WebClientAsync wc = null;
 
 		private static bool _saveDownloadedFile = false;
 
@@ -54,7 +55,7 @@ namespace DMR
 
 		public string OfficialFirmwareFilePath = "";
 
-		private IContainer components;
+		private IContainer components = null;
 
 		private ProgressBar progressBarDwnl;
 

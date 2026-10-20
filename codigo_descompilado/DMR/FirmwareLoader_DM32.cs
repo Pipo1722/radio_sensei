@@ -16,7 +16,7 @@ namespace DMR
 
 		public static Dictionary<string, string> StringsDict = new Dictionary<string, string>();
 
-		private IContainer components;
+		private IContainer components = null;
 
 		private Label lblMessage;
 
@@ -345,7 +345,7 @@ namespace DMR
 
 		private void FirmwareLoader_DM32_Load(object sender, EventArgs e)
 		{
-			Settings.smethod_59(base.Controls);
+			Settings.AttachHelpHandlers(base.Controls);
 			Settings.UpdateComponentTextsFromLanguageXmlData(this);
 			Settings.ReadCommonsForSectionIntoDictionary(StringsDict, "OpenGD77Form");
 		}

@@ -26,11 +26,11 @@ namespace DMR
 			{
 				get
 				{
-					return Settings.smethod_25(name);
+					return Settings.Gb2312BytesToString(name);
 				}
 				set
 				{
-					byte[] array = Settings.smethod_23(value);
+					byte[] array = Settings.StringToGb2312Bytes(value);
 					name.Fill(byte.MaxValue);
 					Array.Copy(array, 0, name, 0, Math.Min(array.Length, name.Length));
 				}
@@ -369,7 +369,7 @@ namespace DMR
 				string text = "";
 				num2 = GetMinIndex();
 				text = string.Format(Format, num2 + 1);
-				if (!Settings.smethod_51(node, text))
+				if (!Settings.ChildNameExists(node, text))
 				{
 					return text;
 				}
@@ -379,7 +379,7 @@ namespace DMR
 					if (num < Count)
 					{
 						text = string.Format(Format, num + 1);
-						if (!Settings.smethod_51(node, text))
+						if (!Settings.ChildNameExists(node, text))
 						{
 							break;
 						}
@@ -1203,20 +1203,20 @@ namespace DMR
 			tsbtnAdd.Image = (Image)componentResourceManager.GetObject("tsbtnAdd.Image");
 			tsbtnNext.Image = (Image)componentResourceManager.GetObject("tsbtnNext.Image");
 			base.Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
-			Scale(Settings.smethod_6());
+			Scale(Settings.GetFactor());
 		}
 
 		private void method_1()
 		{
 			txtName.MaxByteLength = 15;
-			txtName.KeyPress += Settings.smethod_54;
+			txtName.KeyPress += Settings.ValidateKeyPressNone;
 		}
 
 		private void ZoneForm_Load(object sender, EventArgs e)
 		{
-			Settings.smethod_59(base.Controls);
+			Settings.AttachHelpHandlers(base.Controls);
 			Settings.UpdateComponentTextsFromLanguageXmlData(this);
-			Settings.UpdateToolStripFromLanguageXmlData(tsrZone.smethod_10(), base.Name);
+			Settings.UpdateToolStripFromLanguageXmlData(tsrZone.GetAllToolStripItems(), base.Name);
 			method_1();
 			DispData();
 		}
@@ -1235,7 +1235,7 @@ namespace DMR
 			while (lstUnselected.SelectedItems.Count > 0 && lstSelected.Items.Count < 80)
 			{
 				SelectedItemUtils selectedItemUtils = (SelectedItemUtils)lstUnselected.SelectedItems[0];
-				selectedItemUtils.method_1(lstSelected.Items.Count);
+				selectedItemUtils.SetDisplayNumber(lstSelected.Items.Count);
 				num = lstSelected.Items.Add(selectedItemUtils);
 				lstSelected.SetSelected(num, value: true);
 				lstUnselected.Items.RemoveAt(lstUnselected.SelectedIndices[0]);
@@ -1268,7 +1268,7 @@ namespace DMR
 			{
 				SelectedItemUtils selectedItemUtils = (SelectedItemUtils)lstSelected.SelectedItems[0];
 				num = method_3(selectedItemUtils);
-				selectedItemUtils.method_1(-1);
+				selectedItemUtils.SetDisplayNumber(-1);
 				lstUnselected.Items.Insert(num, selectedItemUtils);
 				lstUnselected.SetSelected(num, value: true);
 				lstSelected.Items.RemoveAt(lstSelected.SelectedIndices[0]);
@@ -1369,9 +1369,9 @@ namespace DMR
 			for (num = 0; num < lstSelected.Items.Count; num++)
 			{
 				SelectedItemUtils selectedItemUtils = (SelectedItemUtils)lstSelected.Items[num];
-				if (selectedItemUtils.method_0() != num)
+				if (selectedItemUtils.GetDisplayNumber() != num)
 				{
-					selectedItemUtils.method_1(num);
+					selectedItemUtils.SetDisplayNumber(num);
 					bool selected = lstSelected.GetSelected(num);
 					lstSelected.Items[num] = selectedItemUtils;
 					if (selected)
@@ -1405,7 +1405,7 @@ namespace DMR
 			txtName.Text = txtName.Text.Trim();
 			if (Node.Text != txtName.Text)
 			{
-				if (Settings.smethod_50(Node, txtName.Text))
+				if (Settings.SiblingNameExists(Node, txtName.Text))
 				{
 					txtName.Text = Node.Text;
 				}

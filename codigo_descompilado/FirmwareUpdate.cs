@@ -14,7 +14,7 @@ using UsbLibrary;
 
 internal class FirmwareUpdate : Win32Usb, IFirmwareUpdate
 {
-	public class Class18
+	public class MemorySector
 	{
 		public enum SectorType
 		{
@@ -35,7 +35,7 @@ internal class FirmwareUpdate : Win32Usb, IFirmwareUpdate
 
 		public uint dwSectorSize;
 
-		public Class18(string string_0, SectorType sectorType_0, uint uint_0, uint uint_1, ushort ushort_0)
+		public MemorySector(string string_0, SectorType sectorType_0, uint uint_0, uint uint_1, ushort ushort_0)
 		{
 			Name = string_0;
 			Type = sectorType_0;
@@ -46,7 +46,7 @@ internal class FirmwareUpdate : Win32Usb, IFirmwareUpdate
 	}
 
 	[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
-	public struct Struct0
+	public struct UsbDeviceDescriptor
 	{
 		public byte bLength;
 
@@ -78,7 +78,7 @@ internal class FirmwareUpdate : Win32Usb, IFirmwareUpdate
 	}
 
 	[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto, Pack = 1)]
-	public struct Struct1
+	public struct DfuFunctionalDescriptor
 	{
 		public byte bLength;
 
@@ -94,7 +94,7 @@ internal class FirmwareUpdate : Win32Usb, IFirmwareUpdate
 	}
 
 	[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
-	public struct Struct2
+	public struct DfuStatus
 	{
 		public byte bStatus;
 
@@ -107,7 +107,7 @@ internal class FirmwareUpdate : Win32Usb, IFirmwareUpdate
 	}
 
 	[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
-	public struct Struct3
+	public struct UsbInterfaceDescriptor
 	{
 		public byte bLength;
 
@@ -206,7 +206,7 @@ internal class FirmwareUpdate : Win32Usb, IFirmwareUpdate
 
 	private string DFU_DevicePath;
 
-	private SafeFileHandle _ParentHandle;
+	private SafeFileHandle _ParentHandle = null;
 
 	private ushort MaxWriteBlockSize;
 
@@ -762,7 +762,7 @@ internal class FirmwareUpdate : Win32Usb, IFirmwareUpdate
 						{
 							this.OnFirmwareUpdateProgress(this, new FirmwareUpdateProgressEventArgs(10f, "DFU The device opens successfully", Failed: false, Closed: false));
 						}
-						Struct0 struct0_ = default(Struct0);
+						UsbDeviceDescriptor struct0_ = default(UsbDeviceDescriptor);
 						if (305397760 == STDFU_GetDeviceDescriptor(ref intptr_, ref struct0_))
 						{
 							switch (struct0_.bcdDevice)
@@ -779,7 +779,7 @@ internal class FirmwareUpdate : Win32Usb, IFirmwareUpdate
 							}
 							uint uint_ = 0u;
 							uint uint_2 = 0u;
-							Struct1 struct1_ = default(Struct1);
+							DfuFunctionalDescriptor struct1_ = default(DfuFunctionalDescriptor);
 							if (305397760 == STDFU_GetDFUDescriptor(ref intptr_, ref uint_, ref uint_2, ref struct1_))
 							{
 								if (this.OnFirmwareUpdateProgress != null)
@@ -835,9 +835,9 @@ internal class FirmwareUpdate : Win32Usb, IFirmwareUpdate
 		throw new Exception("STDFU_SelectCurrentConfiguration returned (返回) " + num.ToString("X8"));
 	}
 
-	private void method_15(IntPtr intptr_0, uint uint_0, uint uint_1, List<Class18> cLJ3sEY9awr3Obv1TP)
+	private void method_15(IntPtr intptr_0, uint uint_0, uint uint_1, List<MemorySector> sectors)
 	{
-		foreach (Class18 item in cLJ3sEY9awr3Obv1TP)
+		foreach (MemorySector item in sectors)
 		{
 			if (uint_0 < item.dwStartAddress + item.dwSectorSize && uint_0 + uint_1 > item.dwStartAddress)
 			{
@@ -931,7 +931,7 @@ internal class FirmwareUpdate : Win32Usb, IFirmwareUpdate
 	{
 		long num = 50000000L;
 		long ticks = DateTime.Now.Ticks;
-		Struct2 struct2_ = default(Struct2);
+		DfuStatus struct2_ = default(DfuStatus);
 		STDFU_Getstatus(ref intptr_0, ref struct2_);
 		while (true)
 		{
@@ -971,15 +971,15 @@ internal class FirmwareUpdate : Win32Usb, IFirmwareUpdate
 		{
 			return result;
 		}
-		if (byte_.smethod_4(PACK_ACK))
+		if (byte_.StartsWithBytes(PACK_ACK))
 		{
 			return 0;
 		}
-		if (byte_.smethod_4(PACK_NACK))
+		if (byte_.StartsWithBytes(PACK_NACK))
 		{
 			return 1;
 		}
-		if (byte_.smethod_4(PACK_LOW_VOLT))
+		if (byte_.StartsWithBytes(PACK_LOW_VOLT))
 		{
 			return 2;
 		}
@@ -1005,7 +1005,7 @@ internal class FirmwareUpdate : Win32Usb, IFirmwareUpdate
 		}
 		byte[] array2 = new byte[8];
 		Buffer.BlockCopy(array, 1, array2, 0, 8);
-		if (!array2.smethod_4(Settings.CUR_MODEL))
+		if (!array2.StartsWithBytes(Settings.CUR_MODEL))
 		{
 			return false;
 		}
@@ -1109,14 +1109,14 @@ internal class FirmwareUpdate : Win32Usb, IFirmwareUpdate
 		return true;
 	}
 
-	private List<Class18> method_28(IntPtr intptr_0)
+	private List<MemorySector> method_28(IntPtr intptr_0)
 	{
-		List<Class18> list = new List<Class18>();
+		List<MemorySector> list = new List<MemorySector>();
 		uint num = 0u;
 		uint uint_ = 0u;
 		uint uint_2 = 0u;
-		Struct1 struct1_ = default(Struct1);
-		Struct3 struct3_ = default(Struct3);
+		DfuFunctionalDescriptor struct1_ = default(DfuFunctionalDescriptor);
+		UsbInterfaceDescriptor struct3_ = default(UsbInterfaceDescriptor);
 		uint num2 = 0u;
 		IntPtr intPtr = Marshal.AllocHGlobal(512);
 		if (305397760 == (num = STDFU_GetDFUDescriptor(ref intptr_0, ref uint_, ref uint_2, ref struct1_)))
@@ -1134,13 +1134,13 @@ internal class FirmwareUpdate : Win32Usb, IFirmwareUpdate
 						ushort num3 = 0;
 						uint num4 = 0u;
 						ushort num5 = 0;
-						Class18.SectorType sectorType = Class18.SectorType.Other;
+						MemorySector.SectorType sectorType = MemorySector.SectorType.Other;
 						string text = Marshal.PtrToStringAnsi(intPtr);
 						if ('@' == text[0])
 						{
 							string text2 = text.Substring(1, text.IndexOf('/') - 1);
 							text2 = text2.TrimEnd(' ');
-							sectorType = ((!text2.Equals("Internal Flash")) ? (text2.Equals("Option Bytes") ? Class18.SectorType.OptionBytes : (text2.Equals("OTP Memory") ? Class18.SectorType.OTP : ((!text2.Equals("Device Feature")) ? Class18.SectorType.Other : Class18.SectorType.DeviceFeature))) : Class18.SectorType.InternalFLASH);
+							sectorType = ((!text2.Equals("Internal Flash")) ? (text2.Equals("Option Bytes") ? MemorySector.SectorType.OptionBytes : (text2.Equals("OTP Memory") ? MemorySector.SectorType.OTP : ((!text2.Equals("Device Feature")) ? MemorySector.SectorType.Other : MemorySector.SectorType.DeviceFeature))) : MemorySector.SectorType.InternalFLASH);
 							uint num6 = uint.Parse(text.Substring(text.IndexOf('/') + 3, 8), NumberStyles.HexNumber);
 							string text3 = text;
 							while (text3.IndexOf('*') >= 0)
@@ -1154,7 +1154,7 @@ internal class FirmwareUpdate : Win32Usb, IFirmwareUpdate
 								}
 								for (num5 = 0; num5 < num3; num5++)
 								{
-									list.Add(new Class18(text2, sectorType, num6, num4, num5));
+									list.Add(new MemorySector(text2, sectorType, num6, num4, num5));
 									num6 += num4;
 								}
 								text3 = text3.Substring(text3.IndexOf('*') + 1);
@@ -1179,13 +1179,13 @@ internal class FirmwareUpdate : Win32Usb, IFirmwareUpdate
 	public static extern uint STDFU_SelectCurrentConfiguration(ref IntPtr intptr_0, uint uint_0, uint uint_1, uint uint_2);
 
 	[DllImport("STDFU.dll", CharSet = CharSet.Auto)]
-	public static extern uint STDFU_GetDeviceDescriptor(ref IntPtr intptr_0, ref Struct0 struct0_0);
+	public static extern uint STDFU_GetDeviceDescriptor(ref IntPtr intptr_0, ref UsbDeviceDescriptor struct0_0);
 
 	[DllImport("STDFU.dll", CharSet = CharSet.Auto)]
-	public static extern uint STDFU_GetDFUDescriptor(ref IntPtr intptr_0, ref uint uint_0, ref uint uint_1, ref Struct1 struct1_0);
+	public static extern uint STDFU_GetDFUDescriptor(ref IntPtr intptr_0, ref uint uint_0, ref uint uint_1, ref DfuFunctionalDescriptor struct1_0);
 
 	[DllImport("STDFU.dll", CharSet = CharSet.Auto)]
-	public static extern uint STDFU_GetInterfaceDescriptor(ref IntPtr intptr_0, uint uint_0, uint uint_1, uint uint_2, ref Struct3 struct3_0);
+	public static extern uint STDFU_GetInterfaceDescriptor(ref IntPtr intptr_0, uint uint_0, uint uint_1, uint uint_2, ref UsbInterfaceDescriptor struct3_0);
 
 	[DllImport("STDFU.dll", CharSet = CharSet.Auto)]
 	public static extern uint STDFU_GetStringDescriptor(ref IntPtr intptr_0, uint uint_0, IntPtr intptr_1, uint uint_1);
@@ -1197,7 +1197,7 @@ internal class FirmwareUpdate : Win32Usb, IFirmwareUpdate
 	public static extern uint STDFU_Upload(ref IntPtr intptr_0, [MarshalAs(UnmanagedType.LPArray)] byte[] byte_0, uint uint_0, ushort ushort_0);
 
 	[DllImport("STDFU.dll", CharSet = CharSet.Ansi)]
-	public static extern uint STDFU_Getstatus(ref IntPtr intptr_0, ref Struct2 struct2_0);
+	public static extern uint STDFU_Getstatus(ref IntPtr intptr_0, ref DfuStatus struct2_0);
 
 	[DllImport("STDFU.dll", CharSet = CharSet.Ansi)]
 	public static extern uint STDFU_Clrstatus(ref IntPtr intptr_0);

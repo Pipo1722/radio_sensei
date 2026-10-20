@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.IO.Ports;
@@ -42,7 +43,7 @@ namespace DMR
 
 		public static byte[] calibrationDataSTM32;
 
-		private IContainer components;
+		private IContainer components = null;
 
 		private TabControl tabCtlBands;
 
@@ -147,12 +148,27 @@ namespace DMR
 				break;
 			}
 			commPort.Write(array, 0, 32);
-			while (commPort.BytesToRead == 0)
+			if (!waitForBytes(commPort, 0))
 			{
-				Thread.Sleep(0);
+				return false;
 			}
 			commPort.Read(array, 0, 64);
 			return array[1] == commandNumber;
+		}
+
+		// Waits for the radio to answer. The original code spun forever if the radio stopped responding.
+		private static bool waitForBytes(SerialPort port, int pollSleepMs, int timeoutMs = 5000)
+		{
+			Stopwatch stopwatch = Stopwatch.StartNew();
+			while (port.BytesToRead == 0)
+			{
+				if (stopwatch.ElapsedMilliseconds > timeoutMs)
+				{
+					return false;
+				}
+				Thread.Sleep(pollSleepMs);
+			}
+			return true;
 		}
 
 		private void updateProgess(int progressPercentage)
@@ -182,9 +198,10 @@ namespace DMR
 				array[6] = (byte)((num3 >> 8) & 0xFF);
 				array[7] = (byte)(num3 & 0xFF);
 				port.Write(array, 0, 8);
-				while (port.BytesToRead == 0)
+				if (!waitForBytes(port, 0))
 				{
-					Thread.Sleep(0);
+					result = false;
+					break;
 				}
 				port.Read(array2, 0, 64);
 				if (array2[0] == 82)
@@ -205,6 +222,7 @@ namespace DMR
 				else
 				{
 					result = false;
+					break;
 				}
 			}
 			return result;
@@ -392,9 +410,9 @@ namespace DMR
 			sendbuffer[0] = (byte)writeCharacter;
 			sendbuffer[1] = 3;
 			port.Write(sendbuffer, 0, 2);
-			while (port.BytesToRead == 0)
+			if (!waitForBytes(port, 1))
 			{
-				Thread.Sleep(1);
+				return false;
 			}
 			Thread.Sleep(100);
 			while (port.BytesToRead == 0 && num-- > 0)
@@ -419,9 +437,9 @@ namespace DMR
 			sendbuffer[3] = (byte)((dataObj.data_sector >> 8) & 0xFF);
 			sendbuffer[4] = (byte)(dataObj.data_sector & 0xFF);
 			port.Write(sendbuffer, 0, 5);
-			while (port.BytesToRead == 0)
+			if (!waitForBytes(port, 1))
 			{
-				Thread.Sleep(1);
+				return false;
 			}
 			Thread.Sleep(50);
 			while (port.BytesToRead == 0 && num-- > 0)
@@ -451,9 +469,9 @@ namespace DMR
 			sendbuffer[6] = (byte)((len >> 8) & 0xFF);
 			sendbuffer[7] = (byte)(len & 0xFF);
 			port.Write(sendbuffer, 0, len + 8);
-			while (port.BytesToRead == 0)
+			if (!waitForBytes(port, 1))
 			{
-				Thread.Sleep(1);
+				return false;
 			}
 			Thread.Sleep(20);
 			while (port.BytesToRead == 0 && num-- > 0)

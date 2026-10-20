@@ -105,7 +105,7 @@ namespace DMR
 				}
 				byte[] array = new byte[this[index] - 1];
 				Array.Copy(text, num + index * 144, array, 0, array.Length);
-				return Settings.smethod_25(array);
+				return Settings.Gb2312BytesToString(array);
 			}
 
 			public void SetText(int index, string msg)
@@ -114,7 +114,7 @@ namespace DMR
 				{
 					RemoveAt(index);
 					this[index] = msg.Length + 1;
-					byte[] array = Settings.smethod_23(msg);
+					byte[] array = Settings.StringToGb2312Bytes(msg);
 					this[index] = array.Length + 1;
 					Array.Copy(array, 0, text, index * 144, Math.Min(array.Length, 144));
 				}
@@ -305,7 +305,7 @@ namespace DMR
 			txt = new TextMsgFormCustomPasteWndProc();
 			InitializeComponent();
 			base.Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
-			Scale(Settings.smethod_6());
+			Scale(Settings.GetFactor());
 		}
 
 		private void method_1()
@@ -319,7 +319,7 @@ namespace DMR
 
 		private void TextMsgForm_Load(object sender, EventArgs e)
 		{
-			Settings.smethod_59(base.Controls);
+			Settings.AttachHelpHandlers(base.Controls);
 			Settings.UpdateComponentTextsFromLanguageXmlData(this);
 			txtContent.MaxByteLength = 10;
 			txtContent.Visible = false;

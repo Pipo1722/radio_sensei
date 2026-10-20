@@ -57,11 +57,11 @@ namespace DMR
 			{
 				get
 				{
-					return Settings.smethod_25(name);
+					return Settings.Gb2312BytesToString(name);
 				}
 				set
 				{
-					byte[] array = Settings.smethod_23(value);
+					byte[] array = Settings.StringToGb2312Bytes(value);
 					name.Fill(byte.MaxValue);
 					Array.Copy(array, 0, name, 0, Math.Min(array.Length, name.Length));
 				}
@@ -469,7 +469,7 @@ namespace DMR
 				string text = "";
 				num2 = GetMinIndex();
 				text = string.Format(Format, num2 + 1);
-				if (!Settings.smethod_51(node, text))
+				if (!Settings.ChildNameExists(node, text))
 				{
 					return text;
 				}
@@ -479,7 +479,7 @@ namespace DMR
 					if (num < Count)
 					{
 						text = string.Format(Format, num + 1);
-						if (!Settings.smethod_51(node, text))
+						if (!Settings.ChildNameExists(node, text))
 						{
 							break;
 						}
@@ -602,7 +602,7 @@ namespace DMR
 						num4 = Array.IndexOf(array, Convert.ToUInt16(chIndex + 2));
 						if (num4 >= 0)
 						{
-							array.smethod_3(num4, (ushort)0);
+							array.RemoveItemAndAppend(num4, (ushort)0);
 							Array.Copy(array, 0, scanChList, num3, array.Length);
 						}
 					}
@@ -799,9 +799,9 @@ namespace DMR
 				value.ChMark = chkChMark.Checked;
 				value.Talkback = chkTalkback.Checked;
 				value.PlType = cmbPlType.SelectedIndex;
-				value.TxDesignatedCh = cmbTxDesignatedCh.method_3();
-				value.PriorityCh1 = cmbPriorityCh1.method_3();
-				value.PriorityCh2 = cmbPriorityCh2.method_3();
+				value.TxDesignatedCh = cmbTxDesignatedCh.GetSelectedValue();
+				value.PriorityCh1 = cmbPriorityCh1.GetSelectedValue();
+				value.PriorityCh2 = cmbPriorityCh2.GetSelectedValue();
 				value.SignalingHold = nudSignalingHold.Value;
 				value.PrioritySample = nudPrioritySample.Value;
 				for (num = 0; num < value.ChList.Length; num++)
@@ -841,7 +841,7 @@ namespace DMR
 				txtName.Text = data[num2].Name;
 				chkChMark.Checked = data[num2].ChMark;
 				chkTalkback.Checked = data[num2].Talkback;
-				cmbTxDesignatedCh.method_2(data[num2].TxDesignatedCh);
+				cmbTxDesignatedCh.SelectByValue(data[num2].TxDesignatedCh);
 				cmbPlType.SelectedIndex = data[num2].PlType;
 				nudSignalingHold.Value = data[num2].SignalingHold;
 				nudPrioritySample.Value = data[num2].PrioritySample;
@@ -886,8 +886,8 @@ namespace DMR
 					lstUnselected.SelectedIndex = 0;
 				}
 				method_1();
-				cmbPriorityCh1.method_2(data[num2].PriorityCh1);
-				cmbPriorityCh2.method_2(data[num2].PriorityCh2);
+				cmbPriorityCh1.SelectByValue(data[num2].PriorityCh1);
+				cmbPriorityCh2.SelectByValue(data[num2].PriorityCh2);
 				method_4();
 				RefreshByUserMode();
 			}
@@ -917,18 +917,18 @@ namespace DMR
 		{
 			InitializeComponent();
 			base.Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
-			Scale(Settings.smethod_6());
+			Scale(Settings.GetFactor());
 		}
 
 		private void method_0()
 		{
-			Settings.smethod_45(cmbTxDesignatedCh, SZ_TX_DESIGNATED_CH, ChannelForm.data);
+			Settings.FillCustomComboWithPrefixAndData(cmbTxDesignatedCh, SZ_TX_DESIGNATED_CH, ChannelForm.data);
 		}
 
 		private void method_1()
 		{
-			Settings.smethod_46(cmbPriorityCh1, SZ_PRIORITY_CH, lstSelected);
-			Settings.smethod_46(cmbPriorityCh2, SZ_PRIORITY_CH, lstSelected);
+			Settings.FillCustomComboFromListBox(cmbPriorityCh1, SZ_PRIORITY_CH, lstSelected);
+			Settings.FillCustomComboFromListBox(cmbPriorityCh2, SZ_PRIORITY_CH, lstSelected);
 		}
 
 		private void method_2()
@@ -1001,23 +1001,23 @@ namespace DMR
 		private void method_3()
 		{
 			txtName.MaxByteLength = 15;
-			txtName.KeyPress += Settings.smethod_54;
-			Settings.smethod_37(cmbPlType, SZ_PL_TYPE);
-			Settings.smethod_36(nudSignalingHold, new Class13(2, 255, 1, 25m, 4));
-			Settings.smethod_36(nudPrioritySample, new Class13(3, 31, 1, 250m, 4));
+			txtName.KeyPress += Settings.ValidateKeyPressNone;
+			Settings.FillComboBox(cmbPlType, SZ_PL_TYPE);
+			Settings.ApplyNumericRange(nudSignalingHold, new NumericRange(2, 255, 1, 25m, 4));
+			Settings.ApplyNumericRange(nudPrioritySample, new NumericRange(3, 31, 1, 250m, 4));
 		}
 
 		public static void RefreshCommonLang()
 		{
 			string name = typeof(NormalScanForm).Name;
-			Settings.smethod_78("PriorityCh", SZ_PRIORITY_CH, name);
-			Settings.smethod_78("TxDesignatedCh", SZ_TX_DESIGNATED_CH, name);
-			Settings.smethod_78("PlType", SZ_PL_TYPE, name);
+			Settings.LoadSectionStringArray("PriorityCh", SZ_PRIORITY_CH, name);
+			Settings.LoadSectionStringArray("TxDesignatedCh", SZ_TX_DESIGNATED_CH, name);
+			Settings.LoadSectionStringArray("PlType", SZ_PL_TYPE, name);
 		}
 
 		private void NormalScanForm_Load(object sender, EventArgs e)
 		{
-			Settings.smethod_59(base.Controls);
+			Settings.AttachHelpHandlers(base.Controls);
 			Settings.UpdateComponentTextsFromLanguageXmlData(this);
 			method_3();
 			DispData();
@@ -1058,7 +1058,7 @@ namespace DMR
 			while (lstUnselected.SelectedItems.Count > 0 && lstSelected.Items.Count < 32)
 			{
 				SelectedItemUtils selectedItemUtils = (SelectedItemUtils)lstUnselected.SelectedItems[0];
-				selectedItemUtils.method_1(lstSelected.Items.Count);
+				selectedItemUtils.SetDisplayNumber(lstSelected.Items.Count);
 				num = lstSelected.Items.Add(selectedItemUtils);
 				lstSelected.SetSelected(num, value: true);
 				lstUnselected.Items.RemoveAt(lstUnselected.SelectedIndices[0]);
@@ -1093,7 +1093,7 @@ namespace DMR
 				{
 					SelectedItemUtils selectedItemUtils = (SelectedItemUtils)lstSelected.SelectedItems[0];
 					num = method_6(selectedItemUtils);
-					selectedItemUtils.method_1(-1);
+					selectedItemUtils.SetDisplayNumber(-1);
 					lstUnselected.Items.Insert(num, selectedItemUtils);
 					lstUnselected.SetSelected(num, value: true);
 					lstSelected.Items.RemoveAt(lstSelected.SelectedIndices[0]);
@@ -1193,7 +1193,7 @@ namespace DMR
 			txtName.Text = txtName.Text.Trim();
 			if (Node.Text != txtName.Text)
 			{
-				if (Settings.smethod_50(Node, txtName.Text))
+				if (Settings.SiblingNameExists(Node, txtName.Text))
 				{
 					txtName.Text = Node.Text;
 				}
@@ -1230,9 +1230,9 @@ namespace DMR
 			for (num = 0; num < lstSelected.Items.Count; num++)
 			{
 				SelectedItemUtils selectedItemUtils = (SelectedItemUtils)lstSelected.Items[num];
-				if (selectedItemUtils.method_0() != num)
+				if (selectedItemUtils.GetDisplayNumber() != num)
 				{
-					selectedItemUtils.method_1(num);
+					selectedItemUtils.SetDisplayNumber(num);
 					bool selected = lstSelected.GetSelected(num);
 					lstSelected.Items[num] = selectedItemUtils;
 					if (selected)

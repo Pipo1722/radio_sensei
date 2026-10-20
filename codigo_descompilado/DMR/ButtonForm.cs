@@ -151,7 +151,7 @@ namespace DMR
 
 			public void ShortKeyIsValid(ref byte shortKey, ref byte longKey, byte defShortKey)
 			{
-				if (Settings.smethod_12(shortKey, MIN_KEY, MAX_KEY))
+				if (Settings.IsByteInRange(shortKey, MIN_KEY, MAX_KEY))
 				{
 					if (shortKey == 21)
 					{
@@ -174,7 +174,7 @@ namespace DMR
 
 			public void LongKeyIsValid(ref byte longKey, ref byte shortKey, byte defLongKey)
 			{
-				if (Settings.smethod_12(longKey, MIN_KEY, MAX_KEY))
+				if (Settings.IsByteInRange(longKey, MIN_KEY, MAX_KEY))
 				{
 					if (longKey == 2)
 					{
@@ -562,14 +562,14 @@ namespace DMR
 			this.cmbTkLong.TabIndex = 14;
 			this.cmbTkLong.SelectedIndexChanged += new System.EventHandler(cmbTkLong_SelectedIndexChanged);
 			this.nudEmgShortDur.Increment = new decimal(new int[4] { 50, 0, 0, 0 });
-			this.nudEmgShortDur.method_2(null);
+			this.nudEmgShortDur.SetInputString(null);
 			this.nudEmgShortDur.Location = new System.Drawing.Point(367, 36);
 			this.nudEmgShortDur.Maximum = new decimal(new int[4] { 750, 0, 0, 0 });
 			this.nudEmgShortDur.Minimum = new decimal(new int[4] { 50, 0, 0, 0 });
 			this.nudEmgShortDur.Name = "nudEmgShortDur";
-			this.nudEmgShortDur.method_6(null);
+			this.nudEmgShortDur.SetReplaceString(null);
 			int[] bits = new int[4];
-			this.nudEmgShortDur.method_4(new decimal(bits));
+			this.nudEmgShortDur.SetReplaceValue(new decimal(bits));
 			this.nudEmgShortDur.Size = new System.Drawing.Size(120, 23);
 			this.nudEmgShortDur.TabIndex = 1;
 			this.nudEmgShortDur.Value = new decimal(new int[4] { 50, 0, 0, 0 });
@@ -582,14 +582,14 @@ namespace DMR
 			this.cmbTkShort.TabIndex = 13;
 			this.cmbTkShort.SelectedIndexChanged += new System.EventHandler(cmbTkShort_SelectedIndexChanged);
 			this.nudLongDur.Increment = new decimal(new int[4] { 250, 0, 0, 0 });
-			this.nudLongDur.method_2(null);
+			this.nudLongDur.SetInputString(null);
 			this.nudLongDur.Location = new System.Drawing.Point(367, 68);
 			this.nudLongDur.Maximum = new decimal(new int[4] { 3750, 0, 0, 0 });
 			this.nudLongDur.Minimum = new decimal(new int[4] { 1500, 0, 0, 0 });
 			this.nudLongDur.Name = "nudLongDur";
-			this.nudLongDur.method_6(null);
+			this.nudLongDur.SetReplaceString(null);
 			int[] bits2 = new int[4];
-			this.nudLongDur.method_4(new decimal(bits2));
+			this.nudLongDur.SetReplaceValue(new decimal(bits2));
 			this.nudLongDur.Size = new System.Drawing.Size(120, 23);
 			this.nudLongDur.TabIndex = 3;
 			this.nudLongDur.Value = new decimal(new int[4] { 1500, 0, 0, 0 });
@@ -658,12 +658,12 @@ namespace DMR
 		{
 			data.EmgShortDur = nudEmgShortDur.Value;
 			data.LongDur = nudLongDur.Value;
-			data.Sk1Short = class4_1.method_3();
-			data.Sk1Long = class4_2.method_3();
-			data.Sk2Short = class4_0.method_3();
-			data.Sk2Long = class4_3.method_3();
-			data.TKShort = cmbTkShort.method_3();
-			data.TKLong = cmbTkLong.method_3();
+			data.Sk1Short = class4_1.GetSelectedValue();
+			data.Sk1Long = class4_2.GetSelectedValue();
+			data.Sk2Short = class4_0.GetSelectedValue();
+			data.Sk2Long = class4_3.GetSelectedValue();
+			data.TKShort = cmbTkShort.GetSelectedValue();
+			data.TKLong = cmbTkLong.GetSelectedValue();
 			int num = 0;
 			for (num = 0; num < dgvOneTouch.Rows.Count; num++)
 			{
@@ -683,12 +683,12 @@ namespace DMR
 			method_2();
 			nudEmgShortDur.Value = data.EmgShortDur;
 			nudLongDur.Value = data.LongDur;
-			class4_1.method_2(data.Sk1Short);
-			class4_2.method_2(data.Sk1Long);
-			class4_0.method_2(data.Sk2Short);
-			class4_3.method_2(data.Sk2Long);
-			cmbTkShort.method_2(data.TKShort);
-			cmbTkLong.method_2(data.TKLong);
+			class4_1.SelectByValue(data.Sk1Short);
+			class4_2.SelectByValue(data.Sk1Long);
+			class4_0.SelectByValue(data.Sk2Short);
+			class4_3.SelectByValue(data.Sk2Long);
+			cmbTkShort.SelectByValue(data.TKShort);
+			cmbTkLong.SelectByValue(data.TKLong);
 			int num = 0;
 			for (num = 0; num < dgvOneTouch.Rows.Count; num++)
 			{
@@ -716,14 +716,14 @@ namespace DMR
 		{
 			InitializeComponent();
 			base.Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
-			Scale(Settings.smethod_6());
+			Scale(Settings.GetFactor());
 		}
 
 		private void method_1()
 		{
 			int num = 0;
-			Settings.smethod_36(nudEmgShortDur, new Class13(1, 15, 1, 50m, 3));
-			Settings.smethod_36(nudLongDur, new Class13(4, 15, 1, 250m, 4));
+			Settings.ApplyNumericRange(nudEmgShortDur, new NumericRange(1, 15, 1, 50m, 3));
+			Settings.ApplyNumericRange(nudLongDur, new NumericRange(4, 15, 1, 250m, 4));
 			class4_1.Items.Clear();
 			class4_2.Items.Clear();
 			class4_0.Items.Clear();
@@ -734,12 +734,12 @@ namespace DMR
 			{
 				if (num != 21 && num != 15)
 				{
-					class4_2.method_1(SZ_BUTTON_ITEM[num], num);
-					class4_3.method_1(SZ_BUTTON_ITEM[num], num);
-					cmbTkLong.method_1(SZ_BUTTON_ITEM[num], num);
-					class4_1.method_1(SZ_BUTTON_ITEM[num], num);
-					class4_0.method_1(SZ_BUTTON_ITEM[num], num);
-					cmbTkShort.method_1(SZ_BUTTON_ITEM[num], num);
+					class4_2.AddItem(SZ_BUTTON_ITEM[num], num);
+					class4_3.AddItem(SZ_BUTTON_ITEM[num], num);
+					cmbTkLong.AddItem(SZ_BUTTON_ITEM[num], num);
+					class4_1.AddItem(SZ_BUTTON_ITEM[num], num);
+					class4_0.AddItem(SZ_BUTTON_ITEM[num], num);
+					cmbTkShort.AddItem(SZ_BUTTON_ITEM[num], num);
 				}
 			}
 			num = 0;
@@ -758,7 +758,7 @@ namespace DMR
 		{
 			try
 			{
-				Settings.smethod_59(base.Controls);
+				Settings.AttachHelpHandlers(base.Controls);
 				Settings.UpdateComponentTextsFromLanguageXmlData(this);
 				method_1();
 				DispData();
@@ -777,10 +777,10 @@ namespace DMR
 		public static void RefreshCommonLang()
 		{
 			string name = typeof(ButtonForm).Name;
-			Settings.smethod_78("ButtonItem", SZ_BUTTON_ITEM, name);
-			Settings.smethod_78("Mode", SZ_MODE, name);
-			Settings.smethod_78("CallTypeD", SZ_CALL_TYPE_D, name);
-			Settings.smethod_78("CallTypeA", SZ_CALL_TYPE_A, name);
+			Settings.LoadSectionStringArray("ButtonItem", SZ_BUTTON_ITEM, name);
+			Settings.LoadSectionStringArray("Mode", SZ_MODE, name);
+			Settings.LoadSectionStringArray("CallTypeD", SZ_CALL_TYPE_D, name);
+			Settings.LoadSectionStringArray("CallTypeA", SZ_CALL_TYPE_A, name);
 		}
 
 		private void method_2()
