@@ -1,0 +1,9 @@
+# --- ZoneForm ---
+DMR.ZoneForm.ZoneOne::smethod_0 => IsValidChannelNumber
+DMR.ZoneForm::method_1 => InitializeControls
+DMR.ZoneForm::method_2 => IsFirstChannelSelectedInFirstZone
+DMR.ZoneForm::method_3 => FindUnselectedInsertIndex
+DMR.ZoneForm::method_4 => RenumberSelectedChannels
+DMR.ZoneForm::method_5 => UpdateAddDeleteButtons
+DMR.ZoneForm::method_6 => UpdateNavigationButtons
+DMR.ZoneForm::method_7 => RefreshZoneForms

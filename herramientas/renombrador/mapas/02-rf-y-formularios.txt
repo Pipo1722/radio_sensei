@@ -1,0 +1,54 @@
+# --- FirmwareUpdate (DFU de STM32, codigo no usado) ---
+FirmwareUpdate::Class18 => MemorySector
+FirmwareUpdate::Struct0 => UsbDeviceDescriptor
+FirmwareUpdate::Struct1 => DfuFunctionalDescriptor
+FirmwareUpdate::Struct2 => DfuStatus
+FirmwareUpdate::Struct3 => UsbInterfaceDescriptor
+FirmwareUpdate::method_15(cLJ3sEY9awr3Obv1TP) => sectors
+# --- CodeplugComms ---
+CodeplugComms::Delegate1 => FirmwareUpdateProgressHandler
+CodeplugComms::method_0 => GetCancelComm
+CodeplugComms::method_10 => RemoveProgressCallback
+# --- ChannelForm: frecuencias en BCD (unidades de 10 Hz) ---
+DMR.ChannelForm.ChannelOne::UInt32_0 => RxFreqBcd
+DMR.ChannelForm.ChannelOne::UInt32_1 => TxFreqBcd
+DMR.ChannelForm::method_0 => InitializeControls
+DMR.ChannelForm::method_1 => RefreshComboDataSources
+DMR.ChannelForm::method_2 => OnChannelModeChanged
+DMR.ChannelForm::method_3 => UpdateRxOnlyState
+DMR.ChannelForm::method_4 => UpdateScanSkipState
+DMR.ChannelForm::method_5 => RefreshChannelForms
+DMR.ChannelForm::method_7 => EmptyPlaceholder
+DMR.ChannelForm::method_17 => IsFirstChannelOfFirstZone
+# --- VfoForm ---
+DMR.VfoForm.ChannelOne::UInt32_0 => RxFreqBcd
+DMR.VfoForm.ChannelOne::UInt32_1 => TxFreqBcd
+DMR.VfoForm::method_1 => InitializeControls
+DMR.VfoForm::method_2 => RefreshComboDataSources
+DMR.VfoForm::method_3 => OnChannelModeChanged
+DMR.VfoForm::method_4 => UpdateRxOnlyState
+DMR.VfoForm::method_6 => RefreshChannelForms
+DMR.VfoForm::method_7 => UpdateTimingPreferenceState
+DMR.VfoForm::method_14 => UpdateSteOptionsForTone
+DMR.VfoForm::method_17 => UpdateToneDependentControls
+# --- MainForm ---
+DMR.MainForm::method_0 => GetDockContentFromPersistString
+DMR.MainForm::method_1 => SaveFormData
+DMR.MainForm::method_2 => SaveActiveFormData
+DMR.MainForm::method_3 => SaveAllFormsData
+DMR.MainForm::method_5 => CloseFormsOfType
+DMR.MainForm::method_6 => GetFormForTreeNode
+DMR.MainForm::method_8 => FindTreeNodeBySubType
+DMR.MainForm::method_9 => FindTreeNodeByType
+DMR.MainForm::method_10 => FindMenuItemByShortcut
+DMR.MainForm::method_12 => OpenContactsForm
+DMR.MainForm::method_13 => RefreshAllFormsLanguage
+DMR.MainForm::method_15 => LoadHelpXml
+DMR.MainForm::method_16 => ExportHelpXml
+DMR.MainForm::method_17 => ExportHelpXmlForControls
+DMR.MainForm::method_19 => BuildTreeDataTable
+DMR.MainForm::method_20 => PopulateTreeFromDataTable
+DMR.MainForm::method_21 => AddTreeChildNodes
+DMR.MainForm::method_22 => ExportLanguageXmlTemplate
+DMR.MainForm::smethod_0 => UpdateTreeNodeText
+DMR.MainForm::smethod_1 => IsErasedByte

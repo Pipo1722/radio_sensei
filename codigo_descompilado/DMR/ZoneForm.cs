@@ -128,7 +128,7 @@ namespace DMR
 			}
 
 			[CompilerGenerated]
-			private static bool smethod_0(ushort ushort_0)
+			private static bool IsValidChannelNumber(ushort ushort_0)
 			{
 				if (ushort_0 != 0)
 				{
@@ -1171,8 +1171,8 @@ namespace DMR
 				{
 					lstUnselected.SelectedIndex = 0;
 				}
-				method_5();
-				method_6();
+				UpdateAddDeleteButtons();
+				UpdateNavigationButtons();
 				num4 = basicData.CurZone;
 				num5 = basicData.MainCh;
 				MainChIndex = data.ZoneList[num4].ChList[num5];
@@ -1206,7 +1206,7 @@ namespace DMR
 			Scale(Settings.GetFactor());
 		}
 
-		private void method_1()
+		private void InitializeControls()
 		{
 			txtName.MaxByteLength = 15;
 			txtName.KeyPress += Settings.ValidateKeyPressNone;
@@ -1217,7 +1217,7 @@ namespace DMR
 			Settings.AttachHelpHandlers(base.Controls);
 			Settings.UpdateComponentTextsFromLanguageXmlData(this);
 			Settings.UpdateToolStripFromLanguageXmlData(tsrZone.GetAllToolStripItems(), base.Name);
-			method_1();
+			InitializeControls();
 			DispData();
 		}
 
@@ -1249,8 +1249,8 @@ namespace DMR
 				}
 				lstUnselected.SelectedIndex = num3;
 			}
-			method_4();
-			method_5();
+			RenumberSelectedChannels();
+			UpdateAddDeleteButtons();
 			if (!btnAdd.Enabled)
 			{
 				lstSelected.Focus();
@@ -1267,7 +1267,7 @@ namespace DMR
 			while (lstSelected.SelectedItems.Count > 0)
 			{
 				SelectedItemUtils selectedItemUtils = (SelectedItemUtils)lstSelected.SelectedItems[0];
-				num = method_3(selectedItemUtils);
+				num = FindUnselectedInsertIndex(selectedItemUtils);
 				selectedItemUtils.SetDisplayNumber(-1);
 				lstUnselected.Items.Insert(num, selectedItemUtils);
 				lstUnselected.SetSelected(num, value: true);
@@ -1279,12 +1279,12 @@ namespace DMR
 				num3 = lstSelected.Items.Count - 1;
 			}
 			lstSelected.SelectedIndex = num3;
-			method_4();
-			method_5();
+			RenumberSelectedChannels();
+			UpdateAddDeleteButtons();
 			OpenGD77Form.ClearLastUsedChannelsData();
 		}
 
-		private bool method_2()
+		private bool IsFirstChannelSelectedInFirstZone()
 		{
 			if (Convert.ToInt32(base.Tag) == 0)
 			{
@@ -1311,7 +1311,7 @@ namespace DMR
 					lstSelected.SetSelected(num2 - 1, value: true);
 				}
 			}
-			method_4();
+			RenumberSelectedChannels();
 			OpenGD77Form.ClearLastUsedChannelsData();
 		}
 
@@ -1338,11 +1338,11 @@ namespace DMR
 				num--;
 				num2++;
 			}
-			method_4();
+			RenumberSelectedChannels();
 			OpenGD77Form.ClearLastUsedChannelsData();
 		}
 
-		private int method_3(SelectedItemUtils class14_0)
+		private int FindUnselectedInsertIndex(SelectedItemUtils class14_0)
 		{
 			int num = 0;
 			num = 0;
@@ -1363,7 +1363,7 @@ namespace DMR
 			return num;
 		}
 
-		private void method_4()
+		private void RenumberSelectedChannels()
 		{
 			int num = 0;
 			for (num = 0; num < lstSelected.Items.Count; num++)
@@ -1382,7 +1382,7 @@ namespace DMR
 			}
 		}
 
-		private void method_5()
+		private void UpdateAddDeleteButtons()
 		{
 			int num = Convert.ToInt32(base.Tag);
 			btnAdd.Enabled = lstUnselected.Items.Count > 0 && lstSelected.Items.Count < 80;
@@ -1418,7 +1418,7 @@ namespace DMR
 
 		private void lstSelected_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			method_5();
+			UpdateAddDeleteButtons();
 		}
 
 		private void lstSelected_DoubleClick(object sender, EventArgs e)
@@ -1504,7 +1504,7 @@ namespace DMR
 				Node = treeNode;
 				base.Tag = minIndex;
 				DispData();
-				method_7();
+				RefreshZoneForms();
 				OpenGD77Form.ClearLastUsedChannelsData();
 			}
 		}
@@ -1527,7 +1527,7 @@ namespace DMR
 				TreeNodeItem treeNodeItem2 = Node.Tag as TreeNodeItem;
 				base.Tag = treeNodeItem2.Index;
 				DispData();
-				method_7();
+				RefreshZoneForms();
 				OpenGD77Form.ClearLastUsedChannelsData();
 			}
 			else
@@ -1541,7 +1541,7 @@ namespace DMR
 			handleDeleteClick();
 		}
 
-		private void method_6()
+		private void UpdateNavigationButtons()
 		{
 			tsbtnAdd.Enabled = Node.Parent.Nodes.Count != 68;
 			tsbtnDel.Enabled = Node.Parent.Nodes.Count != 1 && Node.Index != 0;
@@ -1552,7 +1552,7 @@ namespace DMR
 			tslblInfo.Text = $" {data.GetDispIndex(Convert.ToInt32(base.Tag))} / {data.ValidCount}";
 		}
 
-		private void method_7()
+		private void RefreshZoneForms()
 		{
 			if (base.MdiParent is MainForm mainForm)
 			{

@@ -1,0 +1,16 @@
+{
+    // Depurar solo funciona en Windows: la aplicación es WinForms para .NET Framework 4.8.
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "OpenGD77CPS (Windows)",
+            "type": "clr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/codigo_descompilado/bin/Debug/net48/OpenGD77CPS.exe",
+            "cwd": "${workspaceFolder}/codigo_descompilado/bin/Debug/net48",
+            "console": "internalConsole",
+            "stopAtEntry": false
+        }
+    ]
+}
