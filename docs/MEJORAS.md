@@ -29,14 +29,9 @@ Antes de redistribuir el ejecutable o el código, hay que comprobar la licencia 
 mejor que de esta descompilación: tiene nombres y comentarios originales y es más fácil de
 mantener. Este repositorio sigue siendo útil para comparar comportamientos.
 
-### 4. Limpiar la raíz del repositorio
-Quedan dos elementos de la subida inicial que no pertenecen al proyecto:
-- `install.cmd` es el instalador de **Antigravity CLI** (Google). Descarga y ejecuta `agy.exe`
-  desde un servidor externo. No tiene relación con OpenGD77. **Recomendado: borrarlo**, o al menos
-  no ejecutarlo.
-- `OpenGD77CPS/` es un **submódulo roto**: una referencia al commit `8fbecb6` sin `.gitmodules`.
-  Cualquier clon recibe una carpeta vacía. Si contiene algo útil en tu equipo, súbelo como carpeta
-  normal. Si no, `git rm --cached OpenGD77CPS`.
+### 4. ~~Limpiar la raíz del repositorio~~ (hecho)
+Se eliminaron `install.cmd` (instalador de Antigravity CLI, ajeno al proyecto) y el submódulo
+roto `OpenGD77CPS/`.
 
 ---
 

@@ -30,9 +30,7 @@ radio_sensei/
 ├── .github/workflows/        CI: compila en cada push y publica el .exe como artefacto
 ├── .vscode/                  Tareas de build, depuración (Windows) y extensiones recomendadas
 ├── radio_sensei.sln
-├── .editorconfig  .gitattributes  .gitignore
-├── install.cmd               ⚠ no pertenece al proyecto (ver notas)
-└── OpenGD77CPS/              ⚠ submódulo roto de la subida inicial (ver notas)
+└── .editorconfig  .gitattributes  .gitignore
 ```
 
 Equivalencia con la estructura anterior:
@@ -114,11 +112,11 @@ Léelas antes de tocar nada. Recogen lo que no es evidente al abrir el código.
     Detalle en `docs/ANALISIS.md` §8.
 16. **El build modificado tiene la misma versión que el oficial** (`1.2.9690.20973`). Hay que
     cambiarla antes de distribuirlo (`docs/MEJORAS.md` §2).
-17. **Dos restos de la subida inicial que hay que decidir:**
-    - `install.cmd` es el instalador de *Antigravity CLI* (Google). Descarga y ejecuta un
-      binario externo y no tiene nada que ver con OpenGD77. No lo ejecutes; lo recomendable
-      es borrarlo.
-    - `OpenGD77CPS/` es un submódulo git roto (sin `.gitmodules`). Los clones lo reciben vacío.
+17. **Restos de la subida inicial ya eliminados:**
+    - `install.cmd`, el instalador de *Antigravity CLI*, que no tenía relación con el proyecto.
+    - El submódulo roto `OpenGD77CPS/`, que apuntaba al commit `8fbecb6` sin `.gitmodules`.
+
+    Si aparecen en un clon antiguo, se pueden borrar.
 18. **Licencia:** comprueba la del CPS de OpenGD77 antes de redistribuir el código o el
     ejecutable (`docs/MEJORAS.md` §3).
 
